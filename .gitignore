@@ -6,6 +6,7 @@ vendor
 views
 schema
 pretools
+core/rclonedriver/rclone
 
 # ide local
 .vscode
