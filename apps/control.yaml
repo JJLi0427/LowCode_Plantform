@@ -1,0 +1,145 @@
+name: testexplain
+head:
+  title: "compare"
+  summary: ""
+  description: ""
+  keywords:
+    - "compare"
+    - "json"
+  links:
+    - <link href="css/editer.css" rel="stylesheet" type="text/css" >
+    - /assets/css/sform/themes/default.imports.css preload=true type='text/css'
+    - /assets/css/sform/themes/default.css
+  scripts:
+    - /assets/js/sform/themes/test.js preload=true
+    - /assets/js/sform/themes/builder.js
+
+  metas:
+    - <meta name="author" content="runoob">
+    - <meta charset="UTF-8">
+
+  icon:
+  jsonldfiles: 
+    - 1xxxxx.json
+    - 2xxxxx.json
+  ogs:
+   - {property: og:type, content: xxx}
+   - {property: og:title, content: xxx}
+   - {property: og:description, content: xxx}
+   - {property: og:image, content: xxx}
+
+tail:
+  links:
+    - /assets/css/sform/themes/default.imports.css
+    - /assets/css/sform/themes/default.css
+  scripts:
+    - /assets/js/sform/themes/test.js
+    - /assets/js/sform/themes/builder.js
+
+
+# 每次开机后,后台静默运行的任务, 可以设置一次任务，周期任务,开机初始化任务,关机清理任务等
+# 运行时可用的环境变量:indexPageUrl, indexPagePath, appControlPath, appName, 并且appControlPath目录下的bin,lib等子目录自动加入运行环境
+backtasks:
+  # period 设置周期定时任务, 和crontab的格式一致,周期数据分别是: 分、时、日、月、周，之间用空格分开. 
+  # 另外还支持两个特殊的值[start end], 分别表示开机初始化任务、关机清理任务, 另外空值与start等价.
+- period: "10 0 * * 0-6"  #每周的周六和周日,凌晨0:10分执行任务 0 是星期天
+  add: ""  # add package to ${indexPagePath} or ${appControlPath}, and unpacked the target package  (example: add package0.tar.gz package1.zip ${indexPagePath}), default is: ${indexPagePath}
+  copy: "" # similar with [add], but not unpacked the package (example: copy package.tar.gz ${indexPagePath})
+  cmd: ""
+  packdepend: true # copy dependencies libs using ldd for [cmd]
+  inline_shell: ""
+  trace: true
+  args: ["a", "b", "c"]
+  workdir: ""
+  envs:
+  -  hello=heee 
+
+# 静态资源服务, 根据不同的资源类型,自动生成静态网页文件,并加入站点地图sitemap, 设置resource后, entrypoint,input,output都失效
+resource:
+  markdown: 
+    path:    markdown_file_root_path  #可以包含多层子路径, 每个子路径可以包含layout.md
+    render:  render_engine
+    layout:  root_layout
+  html: 
+    path:    html_file_root_path  #可以包含多层子路径, 每个子路径可以包含layout.html
+    render:  render_engine
+    layout:  root_layout
+  
+
+# 用户点击页面提交后,触发的任务, 该提交任务关联的url和input-view-target一致, 该节点和input、output节点紧密关联
+# 运行时可用的环境变量:indexPageUrl, indexPagePath, appControlPath, appName, 并且appControlPath目录下的bin,lib等子目录自动加入运行环境
+entrypoint:
+  cmd:
+  inline_shell:
+  packdepend:
+  workdir:
+  trace: true
+  envs:
+    -  hello=heee
+  paramsinview:
+    # -optexe:label{type[attr1='' attr2='']:v1,v2,v3,v4}
+    # [optexe] paramoption in the excution, can be ignored if none. example: ./cmd.sh --optexe theinput
+    # [:label] label in html form, 
+    # [type] form中输入元素的类型，支持的类别有：select,textarea,button,checkbox,file,image,password,radio,reset,text,color,date,datetime,datetime-local,email,month,number,range,search,tel,time,url,week
+    # :{}, 表明该项只是在view中展示说明,例如标题，并不会被映射为entrypoint的参数
+    # 另外，optexe加上arg_前缀后,自动加入运行环境变量，例如这里color, info, pass, 对应的环境变量是${arg_color}, ${arg_info}, ${arg_pass}
+    - :{h1[attr1='' attr2='']:以下是工具的输入参数} #等价于 <h1 attr1=''  attr2=''>以下是工具的输入参数</h1>
+    - --color:颜色{select[class="center" id='cc']:red/红色,green,dark}
+    - -info:information{checkbox:info1,info2,info3}
+    - --pass:密码{passward[autocomplete]}
+    - :输入文本{textarea[pleaceholder="please input"]}.txt #.txt是可选的,表明entrypoint的输入参数是txt文件,entrypoint执行前，该参数自动转换成.txt的文件
+    - :选择文件{file[accept=".jpg" _maxsize=4KB _depend="$2=='red' && $3=='info1'"]}.jpg  #{file}属性中新增加最大允许文件大小限制_maxsize,例如_maxsize=4MB,_maxsize=4KB等
+    #另外[]中新增_depend属性,格式：_depend="$2=='red'", 双引号""中是javascript逻辑表达式,表达式中$0-$n是paramsinview数据元素的输入取值, 例如paramsinview数组中索引是2的元素取值等于red,并且索引是3的元素取值是info1时,该元素才允许输入, 支持比较运算符、包含运算(str.includes())、逻辑与或
+    #_depend="$2.includes('red')" 表示包含
+    #另外[]中新增_default属性,格式：_default=value, 该元素的缺省值
+    #以下划线开头的属性例如_depend,_maxsize,_default,_inline,_tooltips,_validate,_value等表示框架内部新增的属性:
+    #_validate='/regexp/' or  _validate="(val)=>{return ''}" //only for text
+    #_value="(val)=>{return val;}"
+  resultsinview:
+    #执行结果可以是json格式、kvstr格式
+    #形式和paramsinview类似, 区别1[optexe]: 表示执行结果中key[optexe]映射的值, 空值表示映射全部结果
+    #区别2{}.txt, 表明entrypoint的执行结果是txt文件,返回结果自动转换成可访问该文件的URL
+    #区别3 type支持的标签有：div, img, video, audio, h1-h6, a等等, form类标签暂不支持
+    - <h3>执行结果:</h3>
+    - to:结果{a}.file
+    - key2:结果2{video[controls]}.mp4
+    - key3:结果3{audio[controls]}.mp3
+    - key4:结果4{img}.jpg
+    - key5:结果5{div[class='default']}
+    - key6:结果6{h1}
+    - key7:结果7{span}
+
+
+# 如果entrypoint中设置了paramsinview, 则自动忽略input
+input:
+  # type表示用户点击页面提交请求的数据类型
+  type: html | txt | json | xml | pdf | mp4 | m3u8 | png | jpg | gif | link | form | any
+  stdin: # 表示用户提交的数据(view相关)和entrypoint(exe相关)的命令行参数的映射关系, 数组的顺序<=>命令行参数顺序
+    - {viewparam: ddd.dd, exeparam: , exeopt: , default: , required: true | false , paramtype: txt | number | file} #file 表示打包成文件
+  view:
+    target: "/bac/json-compare"
+    type: sform | vue | html   #select one, amoun them
+    filename: abc.tmp               #select one, between filename and inline_string
+    inline_string: |
+      xxx/xx
+      xxx/xxx/
+      xxxxx
+
+# 如果entrypoint中设置了paramsinview和resultsinview, 则自动忽略output
+output:
+  # type表示entrypoint任务执行后，终端上输出数据的类型, 如果有entrypoint,则必填.
+  type: html | txt | json | xml | pdf | mp4 | m3u8 | png | jpg | gif | form | link | kvstr
+  stdout: # 表示entrypoint(exe相关)结果数据和返回给用户的json数据(view相关)的映射关系, 如果不填写,结果数据被当作Blob数据全部返回
+    - {viewparam: ddd.dd, exeparam: ddd, default: , paramtype: txt | number | blob | file}  #file表示输出的是文件，但stdout显示的是带路径的文件名
+  view: 
+    type: sform | vue | html #note:[html: need self-define api: dispatchData(httpresponsedata), to dispatch http-response-data to htmlnode]
+    filename: xxx.tmp
+    inline_string: |
+
+
+#netdisk store sync local & remote
+#if checkFrequencyInSecond <= 0 then {sync only once, after started}
+rclone:
+ - {remote: alist, remotepath: liyun/music, localctlpath: appPathInControlyaml, localviewpath: appPathInGapplication , upload: true, cleanuploaded: true, checkfrequencyinSecond: 100}
+
+layout: 

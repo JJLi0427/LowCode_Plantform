@@ -1,0 +1,11 @@
+# build directory
+build
+
+# dependencies
+vendor
+views
+schema
+pretools
+
+# ide local
+.vscode

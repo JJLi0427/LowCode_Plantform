@@ -1,0 +1,36 @@
+name: ffep_taplogger
+
+head:
+  title: "查询FFEP日志"
+  summary: ""
+  description: 查询FFEP(TAP)日志,包括国际、国内、ASfep等
+  keywords:
+    - FEP-TAP
+    - 日志
+  links:
+    - /assets/css/entrypoint-form/theme.css
+    - /assets/css/entrypoint-form/inline.css
+  icon: logger.ico
+
+
+entrypoint:
+  inline_shell: |
+    arg_ts=$(echo $arg_ts | tr -d '[\-T:]')
+    arg_rq3=$(echo $arg_rq3 | sed 's/"/\\"/g')
+    url="http://${arg_paddr}/fetchtaplog"
+    data="{\"fepid\":\"${arg_rq1}\",\"tid\":\"${arg_rq2}\",\"partten\":\"${arg_rq3}\",\"ftype\":\"${arg_tylog}\",\"timestamp\":\"${arg_ts}\",\"searchrange\":\"${arg_type}\"}"
+    echo "targeturl: [$url] with-post-data: $data"
+    wget --output-document=- --post-data="$data" "$url" 
+  trace: true
+  paramsinview:
+    - <h1 style="text-align:center;" ><span style='color:green'>TAP环境</span>FEP日志查询</h1>
+    - -paddr:环境选择{radio[required]:10.221.5.92:8500/DPRIC(TAP)测试环境,10.221.5.92:8501/IPRIC(TAP)测试环境,10.221.5.92:8502/ASPRIC(TAP)测试环境,10.221.5.92:8600/DPRIC生产备份,10.221.5.92:8601/IPRIC生产备份,10.221.5.92:8602/ASPRIC生产备份} 
+    - -type:类型{radio[_default='search']:search/日志搜索,statistic/日志收集}
+    - -tylog:日志类型{radio[_default='info']:info,audit}
+    - -tyrq:参数类型{radio[_default='fepid']:fepid,tid,regexp}
+    - -rq1:{text[_depend="$4=='fepid'" _inline='true' _validate='/[0-9A-Z]{12,}/' placeholder='fepid']}
+    - -rq2:{text[_depend="$4=='tid'" _inline='true' placeholder='tid' ]}
+    - -rq3:{text[_depend="$4=='regexp'" _inline='true' placeholder='regexp' ]}
+    - -ts:原请求执行的大致时间{datetime-local[ _depend="$4=='tid'||$4=='regexp'" ]}
+  resultsinview:
+    - :执行结果:{textarea[rows=40 cols=110]}

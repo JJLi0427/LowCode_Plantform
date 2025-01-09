@@ -1,0 +1,44 @@
+name: ipget
+
+head:
+  title: "获取本机IP"
+  summary: ""
+  description: 获取机器的内网/公网IP地址,支持ipv4/ipv6
+  keywords:
+    - 公网IP
+    - IPv4
+    - IPv6
+    - IP地址
+  links:
+    - /assets/css/entrypoint-form/theme.css
+    - /assets/css/entrypoint-form/inline.css
+  icon:
+  ogs: 
+   - {property: og:type, content: website}
+   - {property: og:title, content: 获取本机IP}
+   - {property: og:description, content: 获取机器的内网/公网IP地址,支持ipv4/ipv6}
+
+
+entrypoint:
+  inline_shell: |
+    dst="/tmp/ipget.txt"
+    type=0
+    if [ ${#arg_t} -gt 0 ];then
+      type=${arg_t}
+    fi
+    if [ "$type" = "IPv4;;IPv6" ];then
+      echo "run type: both"
+      ./ipget both
+    else
+      echo "run type: $type"
+      ./ipget $type
+    fi
+
+  workdir: bin
+  trace: true
+  paramsinview:
+    - <h1 style="text-align:center;">本机IP查询</h1>
+    - -t:{checkbox[_default="both"]:IPv4,IPv6}
+  resultsinview:
+    - <h3>查询结果:</h3>
+    - <iframe src="http://localhost:8088/gapplications/ipget/ipget.txt" height="500"></iframe>

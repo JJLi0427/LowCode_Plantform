@@ -1,0 +1,53 @@
+name: jsonxmlformat
+
+head:
+  title: "json，xml格式化展示"
+  summary:  "json，xml格式化展示"
+  description: "将json文本，xml格式化进行展示，支持自定义展示深度，支持全折叠，全展开"
+  keywords:
+    - "json，xml"
+    - "json，xml在线格式化"
+    - "在线格式化"
+    - "json，xml格式化"
+    - "json，xml结构化"
+  links:
+    - /assets/thirdparties/vuetify/fontfamily.css
+    - /assets/thirdparties/vuetify/materialdesignicons.min.css
+    - /assets/thirdparties/vuetify/vuetify.min.css
+    - ace.css 
+  scripts:
+    - /assets/thirdparties/vuetify/vue.js
+    - /assets/thirdparties/vuetify/vuetify.js
+    - src-min/ace.js
+    - src-min/mode-xml.js
+    - src-min/mode-json.js
+    - src-min/mode-text.js
+    - jsonlint.js
+    - vkbeautify.js
+    - data_format_utils.js
+
+  icon:
+  ogs:
+   - {property: og:type, content: website}
+   - {property: og:title, content: json，xml格式化展示}
+   - {property: og:description, content: 在线免费将json文本，xml格式化进行展示，支持自定义展示深度，支持全折叠，全展开}
+
+
+backtasks:
+- period: start
+  inline_shell: |
+    cp ${appcontrolpath}/src-min/worker-json.js ${apppagepath}
+    cp ${appcontrolpath}/src-min/worker-xml.js ${apppagepath}
+  workdir: ""
+  trace: true
+
+
+input:
+  type: any
+  view:
+    target: /jsonxmlview/format
+    type: vue
+    filename: jsonxmlformat.vue
+
+
+    
