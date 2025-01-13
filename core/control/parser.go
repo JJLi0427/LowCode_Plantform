@@ -216,7 +216,6 @@ type Control struct {
 	Resource        Resources       `json:"resource"`
 	Input           IOControl       `json:"input"`
 	Output          IOControl       `json:"output"`
-	Rclone          []RClone        `json:"rclone"`
 	Layout          string          `json:"layout"`
 
 	IndexPageUrl string
@@ -357,12 +356,6 @@ func (c *Control) Parse(controlFile string) error {
 		}
 	}
 
-	for i, e := 0, len(c.Rclone); i < e; i++ {
-		if c.Rclone[i].IsValid() {
-			c.Rclone[i].viewroot = c.GetAppIndexPageHomePath()
-			c.Rclone[i].ctlroot = c.ControlFilePath
-		}
-	}
 
 	//build in app
 	for _, builtin := range GetBuiltinApplications() {

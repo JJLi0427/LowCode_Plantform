@@ -50,12 +50,6 @@ func (a *AppRegisterCenter) Register(ctl *control.Control) (AppPlugin, error) {
 		a.hub.Update(a.hub.Analysis(ctl))
 	}
 
-	for i, e := 0, len(ctl.Rclone); i < e; i++ {
-		if ctl.Rclone[i].IsValid() {
-			go ctl.Rclone[i].Run()
-		}
-	}
-
 	//if _, ok := a.apps[ctl.Name]; ok {
 	//    return nil, fmt.Errorf("app [%s] has been registered before", ctl.Name)
 	//}

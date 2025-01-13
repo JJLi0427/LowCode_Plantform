@@ -1,3 +1,4 @@
+#!/bin/bash
 function systemOS() {
 case "$OSTYPE" in
   solaris*) echo "SOLARIS" ;;
@@ -42,7 +43,7 @@ else
 
  cp -r apps  build/webtools/
 
- cp -r pretools build/webtools/
+#  cp -r pretools build/webtools/
 
 fi
 

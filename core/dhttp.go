@@ -12,7 +12,6 @@ import (
 	"onlinetools/core/control"
 	"onlinetools/core/cvuecompiler"
 	"onlinetools/core/httpproxy"
-	"onlinetools/core/rclonedriver"
 	"onlinetools/core/sitemap"
 	"os"
 	"path"
@@ -83,7 +82,6 @@ func (h *Httpd) Init() error {
 	http.Handle(uapps, stripPrefix(uapps, apps))
 
 	//interal config
-	rclonedriver.ConnectDefaultRclone()
 
 	go h.buildNewApps()
 
