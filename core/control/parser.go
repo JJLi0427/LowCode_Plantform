@@ -19,7 +19,6 @@ import (
 const (
 	RootViewPath string = "views"
 	AppRootPath  string = "gapplications"
-	PreToolsPath string = "pretools"
 	RootAppName  string = "_root"
 )
 

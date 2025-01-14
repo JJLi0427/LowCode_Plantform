@@ -1,14 +1,11 @@
 package core
 
 import (
-	"crypto/tls"
 	"fmt"
 	"net/http"
 	"net/url"
 	"onlinetools/core/appplugin"
 	"onlinetools/core/builtin"
-	"onlinetools/core/common/acme"
-	"onlinetools/core/common/file"
 	"onlinetools/core/control"
 	"onlinetools/core/cvuecompiler"
 	"onlinetools/core/httpproxy"
@@ -113,48 +110,18 @@ func (h *Httpd) ListenAndServe() error {
 		defer h.appcenter.Stop()
 	}
 
-	caroot := path.Join(control.PreToolsPath, "temporaryCA")
-	var acmer *acme.AcmeCA
-	if h.Port == ":80" && len(h.TlsPort) > 0 && h.CACert {
-		caroot = "cert"
-		os.MkdirAll(caroot, 0755)
-		acmer = &acme.AcmeCA{AcmeshFile: path.Join(control.PreToolsPath, "acme.sh", "acme.sh"),
-			WebRoot:    control.RootViewPath,
-			CAPath:     caroot,
-			WebDomains: []string{h.SiteDomainName}}
-	}
-
-	if len(h.TlsPort) > 0 {
-		if len(h.Port) > 0 {
-			fmt.Printf("http listenning on [%s]\n", h.Port)
-			go http.ListenAndServe(h.Port, h.needRedirect(caroot))
-		}
-		if acmer != nil {
-			time.Sleep(time.Second * 3)
-			acmer.Init()
-			h.appcenter.AddCronTask("acme.sh-renew-ca", "0 0 1 * *", acmer)
-		}
-
-		h.tlsisready = true
-		crt, key := path.Join(caroot, "webtools.crt"), path.Join(caroot, "webtools.key")
-
-		dycert := &file.DynamicCertificate{}
-		if err := dycert.Init(crt, key); err != nil {
-			fmt.Println(err)
-			return err
-		}
-
-		fmt.Printf("https listenning on [%s]\n", h.TlsPort)
-		server := &http.Server{Addr: h.TlsPort,
-			TLSConfig: &tls.Config{
-				GetCertificate: func(*tls.ClientHelloInfo) (*tls.Certificate, error) {
-					return dycert.GetCertificate(), nil
-				},
-			},
-		}
-		return server.ListenAndServeTLS("", "")
-		//return server.ListenAndServeTLS(crt, key)
-	}
+	// if len(h.TlsPort) > 0 {
+	// 	dycert := &file.DynamicCertificate{}
+	// 	fmt.Printf("https listenning on [%s]\n", h.TlsPort)
+	// 	server := &http.Server{Addr: h.TlsPort,
+	// 		TLSConfig: &tls.Config{
+	// 			GetCertificate: func(*tls.ClientHelloInfo) (*tls.Certificate, error) {
+	// 				return dycert.GetCertificate(), nil
+	// 			},
+	// 		},
+	// 	}
+	// 	return server.ListenAndServeTLS("", "")
+	// }
 
 	fmt.Printf("http listenning on [%s]\n", h.Port)
 	return http.ListenAndServe(h.Port, nil)

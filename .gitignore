@@ -5,7 +5,6 @@ build
 vendor
 views
 schema
-pretools
 
 # ide local
 .vscode

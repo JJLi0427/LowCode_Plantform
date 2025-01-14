@@ -43,8 +43,6 @@ else
 
  cp -r apps  build/webtools/
 
-#  cp -r pretools build/webtools/
-
 fi
 
 #cp -r schema-exec build/webtools/readme
