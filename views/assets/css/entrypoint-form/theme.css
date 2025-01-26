@@ -1,0 +1,255 @@
+
+#entrypointform, #entryoutput {
+    margin: 0 auto; 
+    min-width: 300px;
+    max-width: 900px;
+}
+@keyframes displaynone {
+    from {background-color: rgb(236, 185, 185);}
+    to {background-color: rgb(247, 247, 247);}
+}
+.itemdisabled {
+    opacity:0.4;
+    transition: opacity .5s;
+    /*animation: displaynone 1s linear;*/
+}
+.formitem {
+    margin-bottom: 0.8rem;
+}
+
+.formrow {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+}
+
+.forminlineitem {
+    display: inline-block;
+    min-width: 80px !important;
+    margin-right: 1rem;
+    margin-bottom: 0;
+}
+.forminlineitem > div.selectedinputtext {
+    display: inline-block;
+}
+
+.formlabel {
+    display: block;
+    word-wrap:break-word;
+    margin-right: 1rem;
+    text-shadow: 1px 1px 2px gray;
+    font-size: large;
+    font-family:"Times New Roman", "Open Sans",sans-serif,Georgia,Serif;
+}
+
+select {
+    max-width: 20rem;
+    min-width: 8rem;
+}
+
+.formlabelinput {
+}
+
+input:focus, textarea:focus, select:focus {
+    outline:none;
+    box-shadow: 0px 0px 4px rgb(130, 175, 240);
+}
+input, textarea, select {
+    outline: none;
+    border: 1px solid rgb(130, 175, 240);
+    border-radius: 5px;
+}
+input:not(input[type="checkbox"],input[type="radio"]), select, textarea, .labelrangevalue {
+    min-height: 1.5rem;
+}
+
+.labelrangevalue {
+    margin-left: 1rem;
+    line-height: 100%;
+}
+
+.formlabel.formlabelsubmit {
+    display: block !important;
+    width: 8rem;
+    height: 2.5rem;
+    text-align: center;
+    margin: 0 auto;
+}
+.formlabel.formlabelsubmit input {
+    cursor: pointer;
+    height: inherit;
+    width: inherit;
+}
+.formlabel.formlabelsubmit input:hover {
+    box-shadow: 0px 0px 4px rgb(130, 175, 240);
+}
+
+#entrypointform .formitem, #entrypointform textarea {
+    max-width: 900px;
+    min-width: 500px;
+    width: 100%;
+    background-color: rgb(247, 247, 247);
+    border-radius: 5px;
+}
+textarea {
+    font-size: large;
+}
+.formlabelselect {
+
+}
+.formlabelcheckbox {
+
+}
+.checkboxcontainer {
+
+}
+.radiocontainer {
+
+}
+.formlabelpassword{
+}
+.formlabeltextarea{
+    display: block;
+}
+.formlabelfile{
+}
+.formlabelsubmit{
+    position: relative;
+}
+
+/*entry output css*/
+#entryoutput::before{
+}
+#entryoutput{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: rgb(247, 247, 247);
+    border-radius: 5px;
+    margin-top: 3rem;
+}
+.entryoutitem{
+    margin-top: 5px;
+}
+.entryoutitem img{
+    min-width: 300px;
+    max-width: 900px;
+}
+.entryoutlabel{
+    word-wrap:break-word;
+    margin-right: 1rem;
+    text-shadow: 1px 1px 2px gray;
+    font-size: large;
+    font-family:"Times New Roman", "Open Sans",sans-serif,Georgia,Serif;
+}
+.entrypointview{
+}
+.entryoutview{
+}
+
+a[class='entryoutview'] {
+    text-decoration: none;
+}
+
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+.loadingspin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 3px #cfd0d1;
+  border-bottom-color: #1c87c9;
+  border-radius: 50%;
+  content: "";
+  position: absolute;
+  height: 2rem;
+  width: 2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  background-color: rgba(247,247,247,0.6);
+}
+
+.displaynone {
+  display: none;
+}
+div.selectedinputtext {
+  position: relative;
+  width: 10em;
+}
+
+div.selectedinputtextlist {
+  position:absolute;
+  left: 3px;
+  top: 1.7rem;
+  width: 100%;
+  max-height: 8em;
+  border-left: 1px solid rgb(130, 175, 240);
+  border-right: 1px solid rgb(130, 175, 240);
+  border-bottom: 1px solid rgb(130, 175, 240);
+  border-radius: 5px;
+  background-color: rgba(247, 247, 247,1);
+  overflow: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+div.selectedinputtextlist::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar buttons */
+}
+div.selectedinputtextlist ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+div.selectedinputtextlist ul > li:hover {
+  background-color: rgb(173, 209, 240);
+}
+
+
+.tooltip-container{
+  position: relative;
+}
+.tooltip-container::before {
+  content: attr(data-tooltip); /* Get the tooltip text from the 'data-tooltip' attribute */
+  position: absolute;
+  top: -30px; /* Adjust this value to control the distance between the tooltip and the container */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  opacity: 0; /* Start with 0 opacity; the tooltip will be hidden */
+  visibility: hidden; /* Hide the tooltip initially */
+  white-space: nowrap; /* Prevent tooltip text from wrapping */
+}
+
+.tooltip-container:hover::before {
+  opacity: 1; /* Show the tooltip when hovering over the container */
+  visibility: visible;
+}
+
+.invalid{
+  animation: invalidtipframe 1s infinite;
+  animation-direction: reverse;
+  animation-timing-function: ease-in-out;
+}
+ @keyframes invalidtipframe {
+  0% {
+    border: 1px solid rgb(244, 244, 244);
+    box-shadow: 0px 0px 4px rgb(244, 244, 244);
+  }
+  100% {
+    border: 1px solid rgb(242, 60, 60);
+    box-shadow: 0px 0px 4px rgb(242, 60, 60);
+  }
+}
