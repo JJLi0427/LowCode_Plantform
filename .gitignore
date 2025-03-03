@@ -3,8 +3,8 @@ build
 
 # dependencies
 vendor
-views
 schema
 
 # ide local
 .vscode
+tmp

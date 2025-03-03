@@ -1,0 +1,241 @@
+@charset "UTF-8";
+.fb-theme-default {
+  font-family: "Open Sans", sans-serif;
+}
+@media screen and (max-width: 600px) {
+  .fb-theme-default {
+    font-size: 21px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .fb-theme-default {
+    font-size: 16px;
+  }
+}
+.fb-theme-default * {
+  box-sizing: border-box;
+}
+.fb-theme-default h1 {
+  text-align: center;
+  font-weight: 400;
+  margin: 1em 0;
+  font-size: 2em;
+}
+.fb-theme-default h2 {
+  font-weight: 400;
+  font-size: 1.5em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.25em 0;
+  color: pur;
+}
+.fb-theme-default input,
+.fb-theme-default label,
+.fb-theme-default select {
+  display: block;
+}
+.fb-theme-default select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.fb-theme-default textarea,
+.fb-theme-default input,
+.fb-theme-default select {
+  font-size: 1em;
+  padding: 0.5em;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  transition: all 0.3s ease-in-out;
+}
+.fb-theme-default textarea:focus,
+.fb-theme-default input:focus,
+.fb-theme-default select:focus {
+  box-shadow: rgba(0, 100, 255, 0.5) 0 0 4px 0;
+  outline: none;
+  border: 1px solid rgba(0, 100, 255, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+.fb-theme-default textarea::placeholder,
+.fb-theme-default input::placeholder,
+.fb-theme-default select::placeholder {
+  color: #b7b7b7;
+}
+.fb-theme-default textarea[type=submit],
+.fb-theme-default input[type=submit],
+.fb-theme-default select[type=submit] {
+  width: auto;
+  padding: 10px 30px;
+  min-width: 200px;
+  font-size: 1.3em;
+  color: white;
+  background-color: #0064ff;
+  margin: 40px auto;
+  cursor: pointer;
+}
+.fb-theme-default textarea[type=radio],
+.fb-theme-default input[type=radio],
+.fb-theme-default select[type=radio] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  transition: 0.2s all linear;
+  position: relative;
+  top: 0.15em;
+  padding: 0 !important;
+  margin: 0;
+  display: inline-block;
+}
+.fb-theme-default textarea[type=radio]:checked,
+.fb-theme-default input[type=radio]:checked,
+.fb-theme-default select[type=radio]:checked {
+  border: 6px solid #0064ff;
+  transition: 0.2s all linear;
+}
+.fb-theme-default textarea[type=radio] + label,
+.fb-theme-default input[type=radio] + label,
+.fb-theme-default select[type=radio] + label {
+  display: inline;
+  padding-left: 0.5em;
+}
+.fb-theme-default textarea[type=checkbox],
+.fb-theme-default input[type=checkbox],
+.fb-theme-default select[type=checkbox] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  width: 1em;
+  height: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  transition: 0.2s all linear;
+  position: relative;
+  top: 0.15em;
+  padding: 0 !important;
+  margin: 0;
+  display: inline-block;
+  /* Set here so that Windows' High-Contrast Mode can override */
+  color: #00b312;
+}
+.fb-theme-default textarea[type=checkbox]::-ms-check,
+.fb-theme-default input[type=checkbox]::-ms-check,
+.fb-theme-default select[type=checkbox]::-ms-check {
+  display: none;
+}
+.fb-theme-default textarea[type=checkbox]::before,
+.fb-theme-default input[type=checkbox]::before,
+.fb-theme-default select[type=checkbox]::before {
+  content: "✔";
+  position: absolute;
+  font-size: 1.2em;
+  right: -0.15em;
+  top: 0.2em;
+  visibility: hidden;
+  transition: 0.1s all linear;
+}
+.fb-theme-default textarea[type=checkbox]:checked::before,
+.fb-theme-default input[type=checkbox]:checked::before,
+.fb-theme-default select[type=checkbox]:checked::before {
+  /* Use `visibility` instead of `display` to avoid recalculating layout */
+  visibility: visible;
+  top: -0.4em;
+  transition: 0.1s all linear;
+}
+.fb-theme-default textarea[type=checkbox] + label,
+.fb-theme-default input[type=checkbox] + label,
+.fb-theme-default select[type=checkbox] + label {
+  display: inline;
+  padding-left: 0.5em;
+}
+.fb-theme-default textarea[type=checkbox]:disabled,
+.fb-theme-default input[type=checkbox]:disabled,
+.fb-theme-default select[type=checkbox]:disabled {
+  background: #ddd;
+  color: gray;
+}
+.fb-theme-default span.form-hint {
+  font-size: 0.7em;
+}
+.fb-theme-default div.form-field {
+  margin: 10px 0;
+  padding: 10px;
+}
+.fb-theme-default div.form-field:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.fb-theme-default abbr.required {
+  color: #A41300;
+  text-decoration: none;
+}
+.fb-theme-default div.input-wrapper {
+  position: relative;
+}
+.fb-theme-default div.input-wrapper fieldset {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+.fb-theme-default div.input-wrapper.with-icon textarea,
+.fb-theme-default div.input-wrapper.with-icon input,
+.fb-theme-default div.input-wrapper.with-icon select {
+  padding-left: 2.3em;
+}
+.fb-theme-default div.input-wrapper.with-icon textarea:focus + i,
+.fb-theme-default div.input-wrapper.with-icon input:focus + i,
+.fb-theme-default div.input-wrapper.with-icon select:focus + i {
+  color: rgba(0, 100, 255, 0.5);
+  transition: all 0.3s ease-in-out;
+}
+.fb-theme-default div.input-wrapper.with-icon fieldset > legend > i {
+  position: static;
+  padding: 0 8px;
+  margin-top: 0;
+}
+.fb-theme-default div.input-wrapper.with-icon i {
+  transition: all 0.3s ease-in-out;
+  position: absolute;
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  left: 0.5em;
+  top: 0;
+  line-height: 1em;
+  /*1px - compensate for border size because we use box-sizing=border-box
+  0.4em - font size is set here therefore 1em is now x1.2 than the font size of the input field.
+          Input field is 2em (1em font + 0.5em padding top and bottom)
+          so 0.4 is half of the remaining space
+  */
+  margin-top: calc(0.4em + 1px);
+}
+
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+.loadingspin{
+  position: relative;
+}
+.loadingspin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 3px #cfd0d1;
+  border-bottom-color: #1c87c9;
+  border-radius: 50%;
+  content: "";
+  position: absolute;
+  height: 2rem;
+  width: 2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  background-color: rgba(247,247,247,0.6);
+}
+
+/*# sourceMappingURL=default.css.map */

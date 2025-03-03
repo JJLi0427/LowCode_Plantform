@@ -5,10 +5,6 @@ head:
   title: "微应用"
   summary: "book search"
   description: "集合了程序员工具箱、图书、音视频、影音数据库等各类应用集合,供大家免费使用。"
-  keywords:
-    - "程序员工具箱"
-    - "图书"
-    - "影音视频"
   links:
     - /assets/thirdparties/vuetify/fontfamily.css
     - /assets/thirdparties/vuetify/materialdesignicons.min.css

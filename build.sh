@@ -20,6 +20,18 @@ fi
 app=$1
 apppath=$2
 
+if [ ! -f views/assets/thirdparties/vuetify/vue.js ]; then
+  curl https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js -o views/assets/thirdparties/vuetify/vue.js
+fi
+
+if [ ! -f views/assets/thirdparties/vuetify/vuetify.js ]; then
+  curl https://cdn.jsdelivr.net/npm/vuetify@2.6.8/dist/vuetify.js -o views/assets/thirdparties/vuetify/vuetify.js
+fi
+
+if [ ! -f views/assets/thirdparties/vuetify/vuetify.min.css ]; then
+  curl https://cdn.jsdelivr.net/npm/vuetify@2.6.8/dist/vuetify.min.css -o views/assets/thirdparties/vuetify/vuetify.min.css
+fi
+
 if [ ${#app} -gt 2 ];then
 
  go build -o ${EXENANME} main.go

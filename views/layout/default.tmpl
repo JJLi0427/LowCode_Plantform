@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <title>{{title .Head.Title}}</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="keywords" content="{{join .Head.Keywords ","}}">
+ <meta name="description" content="{{.Head.Description}}">
+ {{ range $i, $e := .Head.Metas}}{{validateMeta $e }}
+ {{ end }}
+ {{ range $i, $e := .Head.Equivs}}<meta http-equiv="{{$e.Equiv}}" content="{{$e.Content}}">
+ {{ end }}
+ {{ range $i, $j := .Head.Ogs }}<meta property="{{$j.Property}}" content="{{$j.Content}}"/>
+ {{end}}
+ {{ range $i, $h := .Head.Jsonldfiles }}<script type="application/ld+json">{{$h}}</script>
+ {{end}}
+ {{ range $i, $e := .Head.Links }}{{linkAttributes $e }}
+ {{ end }}
+ {{ range $i, $f := .Head.Scripts }}{{scriptAttributes $f}}
+ {{ end }}
+</head>
+<body>
+<div id="maincontainer">
+{{.Input.View.Inline_string}}
+{{.Output.View.Inline_string}}
+</div>
+{{ range $i, $e := .Tail.Links }}{{linkAttributes $e }}
+{{ end }}
+{{ range $i, $f := .Tail.Scripts }}{{scriptAttributes $f}}
+{{ end }}
+</body>
+</html>
