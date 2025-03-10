@@ -4,6 +4,9 @@ build
 # dependencies
 vendor
 schema
+views/assets/thirdparties/vuetify/vue.js
+views/assets/thirdparties/vuetify/vuetify.js
+views/assets/thirdparties/vuetify/vuetify.min.css
 
 # ide local
 .vscode
