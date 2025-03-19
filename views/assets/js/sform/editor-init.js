@@ -54,199 +54,62 @@ langTools.addCompleter(formBuilderCompleter);
 
 var snippets = [];// snippetManager.parseSnippetFile("snippet test\n  TEST!");
 snippets.push({
-    content: `field
-    name \${1:fieldname}
-    type textbox
-    required
-    placeholder \${2:placeholder_text}
-    value \${3:default_value}
-    label \${4:field_label}
-    hint \${5:field_hint}
-    validations
-        minlength 1
-        maxlength 80
-    end validations
-end field`,
+    content: `field\nname \${1:fieldname}\ntype textbox\nrequired\nplaceholder \${2:placeholder_text}\nvalue \${3:default_value}\nlabel \${4:field_label}\nhint \${5:field_hint}\nvalidations\nminlength 1\nmaxlength 80\nend validations\nend field`,
     name: "Text Field",
     tabTrigger: "f-text"
 });
 snippets.push({
-    content: `field
-    name \${1:email}
-    type email
-    icon fas fa-envelope
-    required
-    placeholder \${2:Please enter your email}
-    value \${3:default_value}
-    label \${4:Email}
-    hint \${5:We hate spam too. We will never spam you.}
-    validations
-        minlength 1
-        maxlength 200
-    end validations
-end field`,
+    content: `field\nname \${1:email}\ntype email\nicon fas fa-envelope\nrequired\nplaceholder \${2:Please enter your email}\nvalue \${3:default_value}\nlabel \${4:Email}\nhint \${5:We hate spam too. We will never spam you.}\nvalidations\nminlength 1\nmaxlength 200\nend validations\nend field`,
     name: "Email Field",
     tabTrigger: "f-email"
 });
 snippets.push({
-    content: `field
-    name \${1:phone}
-    type phone
-    icon fas fa-phone
-    required
-    placeholder \${2:Please enter your phone}
-    value \${3:default_value}
-    label \${4:Phone}
-    hint \${5:field_hint}
-end field`,
+    content: `field\nname \${1:phone}\ntype phone\nicon fas fa-phone\nrequired\nplaceholder \${2:Please enter your phone}\nvalue \${3:default_value}\nlabel \${4:Phone}\nhint \${5:field_hint}\nend field`,
     name: "Phone Field",
     tabTrigger: "f-phone"
 });
 snippets.push({
-    content: `field
-    name \${1:website}
-    type url
-    icon fas fa-globe
-    required
-    placeholder \${2:placeholder_text}
-    value \${3:default_value}
-    label \${4:Website}
-    hint \${5:field_hint}
-    validations
-        minlength 1
-        maxlength 300
-    end validations
-end field`,
+    content: `field\nname \${1:website}\ntype url\nicon fas fa-globe\nrequired\nplaceholder \${2:placeholder_text}\nvalue \${3:default_value}\nlabel \${4:Website}\nhint \${5:field_hint}\nvalidations\nminlength 1\nmaxlength 300\nend validations\nend field`,
     name: "URL Field",
     tabTrigger: "f-url"
 });
 snippets.push({
-    content: `field
-    name \${1:password}
-    type password
-    icon fas fa-lock
-    required
-    placeholder \${2:Choose your password}
-    label \${4:Password}
-    hint \${5:Choose a strong password that you can remember}
-    validations
-        minlength 6
-        maxlength 300
-    end validations
-end field`,
+    content: `field\nname \${1:password}\ntype password\nicon fas fa-lock\nrequired\nplaceholder \${2:Choose your password}\nlabel \${4:Password}\nhint \${5:Choose a strong password that you can remember}\nvalidations\nminlength 6\nmaxlength 300\nend validations\nend field`,
     name: "Password Field",
     tabTrigger: "f-password"
 });
 snippets.push({
-    content: `field
-    name \${1:message}
-    type textarea
-    icon fas fa-comment-alt
-    required
-    placeholder \${2:We would love to hear what you have to say}
-    value \${3:default_value}
-    label \${4:Message}
-    hint \${5:field_hint}
-    validations
-        minlength 1
-        maxlength 1500
-    end validations
-end field`,
+    content: `field\nname \${1:message}\ntype textarea\nicon fas fa-comment-alt\nrequired\nplaceholder \${2:We would love to hear what you have to say}\nvalue \${3:default_value}\nlabel \${4:Message}\nhint \${5:field_hint}\nvalidations\nminlength 1\nmaxlength 1500\nend validations\nend field`,
     name: "Textarea Field",
     tabTrigger: "f-textarea"
 });
 snippets.push({
-    content: `field
-    name name
-    icon fas fa-user-tie
-    type textbox
-    required
-    placeholder What is your name?
-    label Name
-    validations
-    minlength 1
-    maxlength 200
-    end validations
-end field`,
+    content: `field\nname name\nicon fas fa-user-tie\ntype textbox\nrequired\nplaceholder What is your name?\nlabel Name\nvalidations\nminlength 1\nmaxlength 200\nend validations\nend field`,
     name: "Name Field",
     tabTrigger: "f-name"
 });
 snippets.push({
-    content: `field
-    type submit
-    label Submit
-end field`,
+    content: `field\ntype submit\nlabel Submit\nend field`,
     name: "Submit Button",
     tabTrigger: "f-submit"
 });
 snippets.push({
-    content: `field
-    name \${1:color}
-    type select
-    icon \${2:fas fa-palette}
-    options
-        \${3:"Red" | "#ff0000"
-        "Green" | "#00ff00" | selected
-        "Blue" | "#0000ff"
-        "Orange" | "#ffa500"
-        "Purple" | "#800080"
-        "White" | "#ffffff"}
-    end options
-    \${4:required}
-    label \${5:What is your favorite color?}
-end field`,
+    content: `field\nname \${1:color}\ntype select\nicon \${2:fas fa-palette}\noptions\n\${3:"Red" | "#ff0000"\n"Green" | "#00ff00" | selected\n"Blue" | "#0000ff"\n"Orange" | "#ffa500"\n"Purple" | "#800080"\n"White" | "#ffffff"}\nend options\n\${4:required}\nlabel \${5:What is your favorite color?}\nend field`,
     name: "Select Option",
     tabTrigger: "f-select"
 });
 snippets.push({
-    content: `field
-    name \${1:age}
-    type radiogroup
-    icon \${2:fas fa-birthday-cake}
-    options
-        \${3:"Less than 18" | "<18" | checked
-        "18-25" | "18-25"
-        "26-35" | "26-35"
-        "36-45" | "36-45"
-        "46-65" | "46-65"
-        "66+" | ">66"}
-    end options
-    \${4:required}
-    label \${5:How old are you?}
-end field`,
+    content: `field\nname \${1:age}\ntype radiogroup\nicon \${2:fas fa-birthday-cake}\noptions\n\${3:"Less than 18" | "<18" | checked\n"18-25" | "18-25"\n"26-35" | "26-35"\n"36-45" | "36-45"\n"46-65" | "46-65"\n"66+" | ">66"}\nend options\n\${4:required}\nlabel \${5:How old are you?}\nend field`,
     name: "Radio Group",
     tabTrigger: "f-radio"
 });
 snippets.push({
-    content: `field
-    name \${1:platforms}
-    type checkboxgroup
-    icon \${2:fas fa-desktop}
-    options
-        \${3:"Windows" 
-        "Linux"
-        "Mac"
-        "Other"
-    end options
-    \${4:required}
-    label \${5:Which platforms do you use?}
-end field`,
+    content: `field\nname \${1:platforms}\ntype checkboxgroup\nicon \${2:fas fa-desktop}\noptions\n\${3:"Windows"\n"Linux"\n"Mac"\n"Other"}\nend options\n\${4:required}\nlabel \${5:Which platforms do you use?}\nend field`,
     name: "Checkbox Group",
     tabTrigger: "f-checkboxes"
 });
 snippets.push({
-    content: `field
-        name address
-        type address-google
-        label Address
-        icon fas fas fa-map-marker-alt
-        required
-        placeholder 4 Penny Lane, Liverpool, England
-        validations
-            maxlength 250
-            minlength 2
-        end validations
-    end field`,
+    content: `field\nname address\ntype address-google\nlabel Address\nicon fas fas fa-map-marker-alt\nrequired\nplaceholder 4 Penny Lane, Liverpool, England\nvalidations\nmaxlength 250\nminlength 2\nend validations\nend field`,
     name: "Google Address Field",
     tabTrigger: "f-gaddress"
 });
@@ -270,11 +133,6 @@ function getHtml() {
     sharedHtml = `<!-- this should be placed in the HEAD -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/danbars/form-builder@0.1/dist/themes/default.imports.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/danbars/form-builder@0.1/dist/themes/default.css">
-<!-- only if you use address-google field, uncomment this line and replace YOUR_API_KEY with your Google API Key (see Help for instructions) -->
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=fb_form.initAutocomplete"
-        async defer></script> -->
-        
-<!-- this should be placed anywhere you want the form to appear -->
 <div id="form" class="fb-theme-default">
 ${formHtml}
 </div>`;
