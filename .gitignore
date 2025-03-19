@@ -2,12 +2,9 @@
 build
 
 # dependencies
-vendor
-schema
 views/assets/thirdparties
 views/assets/css/sform/fontawesome
 views/assets/css/sform/webfonts
-
 
 # ide local
 .vscode
