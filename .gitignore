@@ -4,9 +4,10 @@ build
 # dependencies
 vendor
 schema
-views/assets/thirdparties/vuetify/vue.js
-views/assets/thirdparties/vuetify/vuetify.js
-views/assets/thirdparties/vuetify/vuetify.min.css
+views/assets/thirdparties
+views/assets/css/sform/fontawesome
+views/assets/css/sform/webfonts
+
 
 # ide local
 .vscode
