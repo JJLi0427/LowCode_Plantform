@@ -235,7 +235,6 @@ func (a *appParamParser) mapData(src map[string]interface{}, dest map[string]int
 			dest[kv.Viewparam] = strings.Join(mapdata(src, vkeys), ",")
 
 			if kv.Exeparam == "__wholecontent__" {
-				dest = src
 				break
 			}
 		}

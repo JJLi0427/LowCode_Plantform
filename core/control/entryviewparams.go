@@ -39,7 +39,7 @@ type ViewParamBuilder struct {
 	params              []*viewParam
 	hasJsControlAttrs   bool
 	onformchangejs      []byte
-	onsubmit_validatajs []byte
+	// onsubmit_validatajs []byte
 }
 
 type viewParam struct {
@@ -54,19 +54,6 @@ type viewParam struct {
 	name         string
 	id           string
 	idx          int
-}
-
-func (v *viewParam) clear() {
-	v.Optexe = ""
-	v.Label = ""
-	v.Elem = ""
-	v.ElemAttrs = ""
-	v.ElemContents = nil
-	v.FileExtType = ""
-	v.Node = ""
-	v.name = ""
-	v.id = ""
-	v.idx = 0
 }
 
 func (v *viewParam) jsvalfnname() string {
@@ -451,7 +438,7 @@ func (v *ViewParamBuilder) buildJSFormDataRewriteValue() (string, error) {
 	return bts.String(), nil
 }
 
-func (v *ViewParamBuilder) buildFormViewOnChangeJSEvent(formid string) (string, error) {
+func (v *ViewParamBuilder) buildFormViewOnChangeJSEvent() (string, error) {
 	var bts bytes.Buffer
 	//bts.WriteString(fmt.Sprintf("function onformchange('%s'){", formid))
 	bts.WriteString("function onformchange(formid){")
@@ -686,7 +673,7 @@ func (v *ViewParamBuilder) buildFormView(target, method string) (*ViewControl, e
 
 	bts.WriteString("\n</form>")
 
-	if changeevent, _ := v.buildFormViewOnChangeJSEvent("entrypointform"); scripts.Len() > 0 || len(changeevent) > 0 {
+	if changeevent, _ := v.buildFormViewOnChangeJSEvent(); scripts.Len() > 0 || len(changeevent) > 0 {
 		bts.WriteString(fmt.Sprintf("\n<script>%s\n%s</script>", scripts.String(), changeevent))
 	}
 
