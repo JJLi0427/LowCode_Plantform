@@ -3,7 +3,7 @@ package cvuecompiler
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -412,7 +412,7 @@ func (v *VueComponent) FormatComponentName(Name string) (string, error) {
 }
 
 func (v *VueComponent) BuildFromComponentFile(f string) error {
-	if cf, err := ioutil.ReadFile(f); err == nil {
+	if cf, err := os.ReadFile(f); err == nil {
 		if err = v.BuildFromComponentFileContent(cf); err != nil {
 			return err
 		}

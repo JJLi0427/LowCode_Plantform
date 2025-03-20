@@ -87,41 +87,10 @@ func (h *Httpd) Init() error {
 	return nil
 }
 
-func (h *Httpd) needRedirect(caroot string) http.Handler {
-	hasca := false
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if h.HttpRedirect && len(h.TlsPort) > 0 && h.tlsisready {
-			if !hasca {
-				if _, err := os.Stat(path.Join(caroot, "webtools.crt")); err == nil {
-					hasca = true
-				}
-			}
-			if hasca {
-				http.Redirect(w, r, fmt.Sprintf("https://%s%s%s", h.SiteDomainName, h.TlsPort, r.RequestURI), http.StatusMovedPermanently)
-				return
-			}
-		}
-		http.DefaultServeMux.ServeHTTP(w, r)
-	})
-}
-
 func (h *Httpd) ListenAndServe() error {
 	if h.appcenter != nil {
 		defer h.appcenter.Stop()
 	}
-
-	// if len(h.TlsPort) > 0 {
-	// 	dycert := &file.DynamicCertificate{}
-	// 	fmt.Printf("https listenning on [%s]\n", h.TlsPort)
-	// 	server := &http.Server{Addr: h.TlsPort,
-	// 		TLSConfig: &tls.Config{
-	// 			GetCertificate: func(*tls.ClientHelloInfo) (*tls.Certificate, error) {
-	// 				return dycert.GetCertificate(), nil
-	// 			},
-	// 		},
-	// 	}
-	// 	return server.ListenAndServeTLS("", "")
-	// }
 
 	fmt.Printf("http listenning on [%s]\n", h.Port)
 	return http.ListenAndServe(h.Port, nil)

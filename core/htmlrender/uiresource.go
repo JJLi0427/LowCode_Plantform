@@ -2,7 +2,6 @@ package htmlrender
 
 import (
 	"fmt"
-	"io/ioutil"
 	"onlinetools/core/common/file"
 	"onlinetools/core/htmlrender/markdown"
 	"onlinetools/core/sitemap"
@@ -118,7 +117,7 @@ func (u *UiResource) createIndex(md, url string) {
 
 	}
 
-	if bts, err := ioutil.ReadFile(md); err == nil {
+	if bts, err := os.ReadFile(md); err == nil {
 		u.index.Index(url, string(bts))
 	}
 

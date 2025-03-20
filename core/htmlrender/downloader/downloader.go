@@ -6,7 +6,7 @@ import (
 	"crypto/tls"
 	"encoding/hex"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"net/http"
 	"path"
 	"time"
@@ -45,7 +45,7 @@ func DownloadResource(url, saveto string) (string, error) {
 	h.Write([]byte(url))
 	fname := hex.EncodeToString(h.Sum(nil)) + mtype.Extension()
 
-	ioutil.WriteFile(path.Join(saveto, fname), respBody.Bytes(), 0644)
+	os.WriteFile(path.Join(saveto, fname), respBody.Bytes(), 0644)
 
 	return fname, nil
 }

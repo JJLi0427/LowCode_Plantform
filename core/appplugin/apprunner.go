@@ -37,9 +37,6 @@ func (e *exeEntry) Run() {
 		fmt.Println(string(r), err)
 	}
 }
-func (e *exeEntry) setenvs(envs []string) {
-	e.cmdenvs = append(e.cmdenvs, envs...)
-}
 
 func (e *exeEntry) run(params []string, envargs ...string) ([]byte, error) {
 	if len(e.args) > 0 {
@@ -327,21 +324,3 @@ func (a *appRunner) envArgs(ps []*appParam) []string {
 	}
 	return envs
 }
-
-/*
-func (a *appRunner) runApp(rawparams []byte)([]appParam, error) {
-    if ps, err := a.input.Parse(rawparams); err == nil {
-        var params []string
-        for _, p :=range ps {
-            params = append(params, p.Get())
-        }
-        if res, err := a.cmd.run(params); err == nil {
-            return a.output.Parse(res)
-        }else{
-            return nil, err
-        }
-    }else{
-        return nil, err
-    }
-}
-*/
