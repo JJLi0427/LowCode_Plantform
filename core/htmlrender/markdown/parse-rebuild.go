@@ -5,7 +5,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -34,7 +33,7 @@ func RebuildMarkdown2LocalHtml(md, savepath string) (string, error) {
 	savepath = path.Join(savepath, sub)
 	os.MkdirAll(savepath, 0700)
 
-	markdown, err := ioutil.ReadFile(md)
+	markdown, err := os.ReadFile(md)
 	if err != nil {
 		return "", err
 	}
@@ -64,7 +63,7 @@ func RebuildMarkdown2LocalHtml(md, savepath string) (string, error) {
 
 		if newmarkdown.Len() > 0 {
 			if bts, err := Markdown2Html(newmarkdown.Bytes(), true); err == nil {
-				ioutil.WriteFile(path.Join(savepath, "index.html"), bts, 0700)
+				os.WriteFile(path.Join(savepath, "index.html"), bts, 0700)
 			}
 		}
 	}
@@ -141,7 +140,7 @@ func GetAllLinks(markdown string) map[string]string {
 
 // fileToString returns string representation of a file.
 func fileToString(file string) (string, error) {
-	bytes, err := ioutil.ReadFile(file)
+	bytes, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
 	}
@@ -178,13 +177,4 @@ func ParseMarkdownURL(URL string) (map[string]string, error) {
 		return make(map[string]string), err
 	}
 	return GetAllLinks(file), nil
-}
-
-// readFile returns contents of the file.
-func readFile(filename string) string {
-	b, err := ioutil.ReadFile(filename)
-	if err != nil {
-		fmt.Print(err)
-	}
-	return string(b)
 }

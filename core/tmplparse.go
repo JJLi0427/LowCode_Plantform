@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -85,7 +84,7 @@ func (t *Tmpl) Load(dir, ext string) (err error) {
 			b  []byte
 		)
 
-		if b, err = ioutil.ReadFile(path); err != nil {
+		if b, err = os.ReadFile(path); err != nil {
 			return err
 		}
 

@@ -3,7 +3,6 @@ package sitemap
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -125,7 +124,7 @@ func (s *SiteMapBuilder) BuildSiteMaps() {
 	}
 
 	if bts, err := s.siteMaps(); err == nil {
-		ioutil.WriteFile(path.Join(s.SavePath, "sitemap.xml"), bts, os.ModePerm)
+		os.WriteFile(path.Join(s.SavePath, "sitemap.xml"), bts, os.ModePerm)
 		s.sitemapUpdated = true
 	} else {
 		fmt.Println(err)
@@ -144,7 +143,7 @@ func (s *SiteMapBuilder) BuildOnce(idx int) {
 	}
 
 	if bts, err := s.Bytes(); err == nil {
-		ioutil.WriteFile(path.Join(s.SavePath, s.newSiteMapName(sitemapurl, idx)), bts, os.ModePerm)
+		os.WriteFile(path.Join(s.SavePath, s.newSiteMapName(sitemapurl, idx)), bts, os.ModePerm)
 		s.BuildSiteMaps()
 	}
 }

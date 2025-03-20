@@ -37,9 +37,6 @@ func (e *exeEntry) Run() {
 		fmt.Println(string(r), err)
 	}
 }
-func (e *exeEntry) setenvs(envs []string) {
-	e.cmdenvs = append(e.cmdenvs, envs...)
-}
 
 func (e *exeEntry) run(params []string, envargs ...string) ([]byte, error) {
 	if len(e.args) > 0 {

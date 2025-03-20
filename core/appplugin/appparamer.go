@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -382,7 +381,7 @@ func (a *appParam) SetContentBytes(con []byte) {
 		if len(a.hintFileExt) > 0 {
 			fmode = "onlinetool.*" + a.hintFileExt
 		}
-		if file, err := ioutil.TempFile(os.TempDir(), fmode); err == nil {
+		if file, err := os.CreateTemp(os.TempDir(), fmode); err == nil {
 			defer file.Close()
 			file.Write(con)
 			a.content = []byte(file.Name())
@@ -402,7 +401,7 @@ func (a *appParam) SetContentMultipart(f []*multipart.FileHeader) error {
 			if len(a.hintFileExt) > 0 {
 				fmode = "onlinetool.*" + a.hintFileExt
 			}
-			if file, err := ioutil.TempFile(os.TempDir(), fmode); err == nil {
+			if file, err := os.CreateTemp(os.TempDir(), fmode); err == nil {
 				defer file.Close()
 				io.Copy(file, srcfile)
 				a.content = []byte(file.Name())

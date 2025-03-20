@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"onlinetools/core/common/tmpl"
 	"onlinetools/core/htmlrender"
 	"os"
@@ -323,7 +322,7 @@ func (c *Control) Validate() error {
 }
 
 func (c *Control) Parse(controlFile string) error {
-	if yamlFile, err := ioutil.ReadFile(controlFile); err == nil {
+	if yamlFile, err := os.ReadFile(controlFile); err == nil {
 		err = yaml.Unmarshal(yamlFile, c)
 		if err != nil {
 			return err
@@ -347,7 +346,7 @@ func (c *Control) Parse(controlFile string) error {
 				e = c.ControlFilePath + e
 				c.AppendAssociateFiles(e)
 			}
-			if bt, err := ioutil.ReadFile(e); err == nil {
+			if bt, err := os.ReadFile(e); err == nil {
 				c.Head.Jsonldfiles[i] = string(bt)
 			} else {
 				return fmt.Errorf("read jsonld file %s, %s", e, err.Error())
@@ -369,11 +368,11 @@ func (c *Control) Parse(controlFile string) error {
 			e = c.ControlFilePath + e
 			c.AppendAssociateFiles(e)
 		}
-		if bt, err := ioutil.ReadFile(e); err == nil {
+		if bt, err := os.ReadFile(e); err == nil {
 			c.Input.View.Inline_string = string(bt) + c.Input.View.Inline_string
 		} else {
 			e := filepath.Join(RootViewPath, c.Input.View.Filename)
-			if bt, err := ioutil.ReadFile(e); err == nil {
+			if bt, err := os.ReadFile(e); err == nil {
 				c.AppendAssociateFiles(e)
 				c.Input.View.Inline_string = string(bt) + c.Input.View.Inline_string
 			} else {
@@ -388,11 +387,11 @@ func (c *Control) Parse(controlFile string) error {
 			e = c.ControlFilePath + e
 			c.AppendAssociateFiles(e)
 		}
-		if bt, err := ioutil.ReadFile(e); err == nil {
+		if bt, err := os.ReadFile(e); err == nil {
 			c.Output.View.Inline_string = string(bt) + c.Output.View.Inline_string
 		} else {
 			e := filepath.Join(RootViewPath, c.Output.View.Filename)
-			if bt, err := ioutil.ReadFile(e); err == nil {
+			if bt, err := os.ReadFile(e); err == nil {
 				c.AppendAssociateFiles(e)
 				c.Output.View.Inline_string = string(bt) + c.Output.View.Inline_string
 			} else {
@@ -480,37 +479,6 @@ func (c *Control) SaveHtml(filename string) (*os.File, error) {
 	return os.OpenFile(ff, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0640)
 }
 
-func splitfiles(files []string) ([]string, []string) {
-	var cfiles []string
-	var gfiles []string
-	for _, f := range files {
-		if len(f) == 0 {
-			continue
-		}
-		if f[0] == '/' || strings.HasPrefix(f, "http") {
-			gfiles = append(gfiles, f)
-		} else {
-			cfiles = append(cfiles, f)
-		}
-	}
-
-	return gfiles, cfiles
-}
-
-func (c *Control) splitfilesbyext(cc []string, ext string) ([]string, []string) {
-	var c1 []string
-	var c2 []string
-	for _, f := range cc {
-		if filepath.Ext(f) == ext {
-			c1 = append(c1, f)
-		} else {
-			c2 = append(c2, f)
-		}
-	}
-
-	return c1, c2
-}
-
 func (c *Control) loadLocalLinks(links []string) {
 	for _, link := range links {
 		if f, cnt := tmpl.Attributes(link, "href", true); cnt == 1 && len(f) > 0 {
@@ -559,14 +527,14 @@ func (c *Control) localrelativeurl(file string) (string, error) {
 	}
 
 	f := path.Join(AppRootPath, c.Name) + "/" + file
-	if bts, err := ioutil.ReadFile(path.Join(c.ControlFilePath, file)); err == nil {
+	if bts, err := os.ReadFile(path.Join(c.ControlFilePath, file)); err == nil {
 		c.AppendAssociateFiles(path.Join(c.ControlFilePath, file))
 
 		if ext := filepath.Ext(file); ext == ".js" || ext == ".ts" {
 			bts = c.formatJS(string(bts))
 		}
 
-		ioutil.WriteFile(f, bts, 0640)
+		os.WriteFile(f, bts, 0640)
 	} else {
 		return "", err
 	}
@@ -669,7 +637,7 @@ func (c *Control) Save() error {
 
 	if len(c.bcss) > 0 {
 		if pf, pu, err := c.apppath("css", "below"); err == nil {
-			if err := ioutil.WriteFile(pf, c.bcss, 0640); err == nil {
+			if err := os.WriteFile(pf, c.bcss, 0640); err == nil {
 				c.Tail.Links = append(c.Tail.Links, pu)
 			} else {
 				return err
@@ -681,7 +649,7 @@ func (c *Control) Save() error {
 
 	if len(c.tcss) > 0 {
 		if pf, pu, err := c.apppath("css", "top"); err == nil {
-			if err := ioutil.WriteFile(pf, c.tcss, 0640); err == nil {
+			if err := os.WriteFile(pf, c.tcss, 0640); err == nil {
 				c.Head.Links = append(c.Head.Links, pu)
 			} else {
 				return err
@@ -693,7 +661,7 @@ func (c *Control) Save() error {
 
 	if len(c.tjs) > 0 {
 		if pf, pu, err := c.apppath("js", "top"); err == nil {
-			if err := ioutil.WriteFile(pf, c.tjs, 0640); err == nil {
+			if err := os.WriteFile(pf, c.tjs, 0640); err == nil {
 				c.Head.Scripts = append(c.Head.Scripts, pu)
 			} else {
 				return err
@@ -705,7 +673,7 @@ func (c *Control) Save() error {
 
 	if len(c.bjs) > 0 {
 		if pf, pu, err := c.apppath("js", "below"); err == nil {
-			if err := ioutil.WriteFile(pf, c.bjs, 0640); err == nil {
+			if err := os.WriteFile(pf, c.bjs, 0640); err == nil {
 				c.Tail.Scripts = append(c.Tail.Scripts, pu)
 			} else {
 				return err

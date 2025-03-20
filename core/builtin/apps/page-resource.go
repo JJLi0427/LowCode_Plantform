@@ -94,25 +94,9 @@ func (s *StaticResource) Run(args []string, envs []string) (chan []byte, error) 
 		//          }]}
 		//	`)
 		bts.WriteString(`
-	{ "detas": [ { "header": "Today" },
-        {
-          "thumbnail": "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          "title": "Brunch this weekend?",
-          "subtitle": "<span>Ali Connors</span> Ill be in your neighborhood doing errands this weekend. Do you want to hang out?"
-	}, 
-        { "divider": true, "inset": true },
-        {
-          "avatar": "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          "title": "Brunch this weekend?",
-          "subtitle": "<span>Ali Connors</span> Ill be in your neighborhood doing errands this weekend. Do you want to hang out?"
-	},
-	{ "header": "Updated" },
-        {
-          "avatar": "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          "title": "Brunch this weekend?",
-          "subtitle": "<span>Ali Connors</span> Ill be in your neighborhood doing errands this weekend. Do you want to hang out?"
-	}
-	] } `)
+	{ "detas": [ { "header": "Today" },{"thumbnail": "https://cdn.vuetifyjs.com/images/lists/1.jpg","title": "Brunch this weekend?","subtitle": "<span>Ali Connors</span> Ill be in your neighborhood doing errands this weekend. Do you want to hang out?"}, 
+    { "divider": true, "inset": true },{"avatar": "https://cdn.vuetifyjs.com/images/lists/1.jpg","title": "Brunch this weekend?","subtitle": "<span>Ali Connors</span> Ill be in your neighborhood doing errands this weekend. Do you want to hang out?"},
+	{ "header": "Updated" },{"avatar": "https://cdn.vuetifyjs.com/images/lists/1.jpg","title": "Brunch this weekend?","subtitle": "<span>Ali Connors</span> Ill be in your neighborhood doing errands this weekend. Do you want to hang out?"}] } `)
 		ch <- bts.Bytes()
 		time.Sleep(time.Second)
 		close(ch)
