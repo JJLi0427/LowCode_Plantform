@@ -239,10 +239,8 @@ func (v *VueBuilder) BuildJS(vuecontent string, vuefilename string, elementId st
         }
     }
 	
-    if ignore != nil {
-        for name := range ignore {
-            childs.Remove(name)
-        }
+    for name := range ignore {
+        childs.Remove(name)
     }
 
     if isInput {
