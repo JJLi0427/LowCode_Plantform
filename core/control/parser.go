@@ -48,9 +48,6 @@ type TailControl struct {
 	Scripts []string `json:"scripts,omitempty"`
 }
 
-//func (t *TailControl) Include(tag string) bool {
-//}
-
 type Resources struct {
 	Markdown htmlrender.UiResource `json:"markdown"`
 	Html     htmlrender.UiResource `json:"html"`
@@ -74,7 +71,6 @@ type HeadControl struct {
 }
 
 func (c *HeadControl) validate() error {
-
 	return nil
 }
 
@@ -235,31 +231,17 @@ func (c *Control) GetEnvs() []string {
 
 	envs := []string{}
 	if path, err := filepath.Abs(c.GetAppIndexPageHomePath()); err == nil {
-		envs = append(envs,
-			[]string{fmt.Sprintf("%s=%s", "indexpagepath", path),
-				fmt.Sprintf("%s=%s", "IndexPagePath", path),
-				fmt.Sprintf("%s=%s", "indexPagePath", path),
-				fmt.Sprintf("%s=%s", "AppPagePath", path),
-				fmt.Sprintf("%s=%s", "appPagePath", path),
-				fmt.Sprintf("%s=%s", "apppagepath", path)}...)
+		envs = append(envs, []string{
+			fmt.Sprintf("%s=%s", "indexpagepath", path), fmt.Sprintf("%s=%s", "IndexPagePath", path), fmt.Sprintf("%s=%s", "indexPagePath", path), 
+			fmt.Sprintf("%s=%s", "AppPagePath", path), fmt.Sprintf("%s=%s", "appPagePath", path), fmt.Sprintf("%s=%s", "apppagepath", path)}...)
 	}
 
-	envs = append(envs, fmt.Sprintf("%s=%s", "IndexPageUrl", c.IndexPageUrl))
-	envs = append(envs, fmt.Sprintf("%s=%s", "indexPageUrl", c.IndexPageUrl))
-	envs = append(envs, fmt.Sprintf("%s=%s", "indexpageurl", c.IndexPageUrl))
-	envs = append(envs, fmt.Sprintf("%s=%s", "AppPageUrl", c.IndexPageUrl))
-	envs = append(envs, fmt.Sprintf("%s=%s", "appPageUrl", c.IndexPageUrl))
-	envs = append(envs, fmt.Sprintf("%s=%s", "apppageurl", c.IndexPageUrl))
-	envs = append(envs, fmt.Sprintf("%s=%s", "AppName", c.Name))
-	envs = append(envs, fmt.Sprintf("%s=%s", "appName", c.Name))
-	envs = append(envs, fmt.Sprintf("%s=%s", "appname", c.Name))
+	envs = append(envs, fmt.Sprintf("%s=%s", "IndexPageUrl", c.IndexPageUrl), fmt.Sprintf("%s=%s", "indexPageUrl", c.IndexPageUrl), fmt.Sprintf("%s=%s", "indexpageurl", c.IndexPageUrl))
+	envs = append(envs, fmt.Sprintf("%s=%s", "AppPageUrl", c.IndexPageUrl), fmt.Sprintf("%s=%s", "appPageUrl", c.IndexPageUrl), fmt.Sprintf("%s=%s", "apppageurl", c.IndexPageUrl))
+	envs = append(envs, fmt.Sprintf("%s=%s", "AppName", c.Name), fmt.Sprintf("%s=%s", "appName", c.Name), fmt.Sprintf("%s=%s", "appname", c.Name))
 
 	if apath, err := filepath.Abs(c.ControlFilePath); err == nil {
-		envs = append(envs, fmt.Sprintf("%s=%s", "AppControlPath", apath))
-		envs = append(envs, fmt.Sprintf("%s=%s", "appControlPath", apath))
-		envs = append(envs, fmt.Sprintf("%s=%s", "appcontrolpath", apath))
-		//envs = append(envs, fmt.Sprintf("%s=%s", "LD_LIBRARY_PATH", fmt.Sprintf("%s:%s", path.Join(apath, "lib"), os.Getenv("LD_LIBRARY_PATH"))))
-		//envs = append(envs, fmt.Sprintf("%s=%s", "PATH", fmt.Sprintf("%s:%s", path.Join(apath, "bin"), os.Getenv("PATH"))))
+		envs = append(envs, fmt.Sprintf("%s=%s", "AppControlPath", apath), fmt.Sprintf("%s=%s", "appControlPath", apath), fmt.Sprintf("%s=%s", "appcontrolpath", apath))
 	} else {
 		fmt.Println("Error: add [ControlFilePath] env variable failed: ", err.Error())
 	}
@@ -287,9 +269,6 @@ func (c *Control) Validate() error {
 	if e := c.Head.validate(); e != nil {
 		return e
 	}
-	//if e := c.Tail.validate(); e != nil {
-	//	return e
-	//}
 	if e := c.Input.validate(c.Entrypoint.HasExeEntrypoint()); e != nil {
 		return e
 	}
@@ -464,10 +443,6 @@ func (c *Control) GetAppIndexPageHomePath() string {
 	return path.Join(AppRootPath, c.Name)
 }
 
-//func (c *Control) GetAppIndexPageUrl() string {
-//	return "/" + path.Join(AppRootPath, c.Name)
-//}
-
 func (c *Control) SaveHtml(filename string) (*os.File, error) {
 	p := c.GetAppIndexPageHomePath()
 	if err := os.MkdirAll(p, 0750); err != nil {
@@ -541,76 +516,6 @@ func (c *Control) localrelativeurl(file string) (string, error) {
 
 	return "/" + f, nil
 }
-
-/*
-func (c *Control) loadlocalCssJsold() {
-	if gg, cc := splitfiles(c.Head.Links); len(cc) > 0 {
-		c.Head.Links = gg
-		cc, ss := c.splitfilesbyext(cc, ".css")
-		if len(ss) > 0 {
-			for _, s := range ss {
-				if url, err := c.localrelativeurl(s); err == nil {
-					c.Head.Links = append(c.Head.Links, url)
-				}
-			}
-		}
-		c.SaveCSS(c.loadlocalfiles(cc), true)
-
-	}
-
-	if gg, cc := splitfiles(c.Head.Scripts); len(cc) > 0 {
-		c.Head.Scripts = gg
-		cc, ss := c.splitfilesbyext(cc, ".js")
-		if len(ss) > 0 {
-			for _, s := range ss {
-				if url, err := c.localrelativeurl(s); err == nil {
-					c.Head.Links = append(c.Head.Scripts, url)
-				}
-			}
-		}
-		c.SaveJS(c.loadlocalfiles(cc), true)
-	}
-
-	if gg, cc := splitfiles(c.Tail.Links); len(cc) > 0 {
-		c.Tail.Links = gg
-		cc, ss := c.splitfilesbyext(cc, ".css")
-		if len(ss) > 0 {
-			for _, s := range ss {
-				if url, err := c.localrelativeurl(s); err == nil {
-					c.Tail.Links = append(c.Tail.Links, url)
-				}
-			}
-		}
-		c.SaveCSS(c.loadlocalfiles(cc), false)
-	}
-
-	if gg, cc := splitfiles(c.Tail.Scripts); len(cc) > 0 {
-		c.Tail.Scripts = gg
-		cc, ss := c.splitfilesbyext(cc, ".js")
-		if len(ss) > 0 {
-			for _, s := range ss {
-				if url, err := c.localrelativeurl(s); err == nil {
-					c.Tail.Scripts = append(c.Tail.Scripts, url)
-				}
-			}
-		}
-		c.SaveJS(c.loadlocalfiles(cc), false)
-	}
-}
-
-func (c *Control) loadlocalfiles(files []string) string {
-	var btts bytes.Buffer
-	for _, f := range files {
-		lfile := path.Join(c.ControlFilePath, f)
-		c.AppendAssociateFiles(lfile)
-		if fd, err := os.Open(lfile); err == nil {
-			io.Copy(&btts, fd)
-			fd.Close()
-		}
-	}
-
-	return btts.String()
-}*/
 
 func (c *Control) Save() error {
 	c.loadLocalLinkScripts()

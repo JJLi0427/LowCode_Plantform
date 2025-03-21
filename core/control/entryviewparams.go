@@ -732,9 +732,7 @@ func (v *ViewParamBuilder) buildOutputView() (*ViewControl, string, error) {
 
 	if len(v.params) > 0 {
 		bts.WriteString(`<div id="entryoutput" class="entrypointview">`)
-		btscript.WriteString(`window.dispatchData = function(payload){
-      var entryoutview = document.getElementById('entryoutput');
-      entryoutview.innerHTML = '';`)
+		btscript.WriteString(`window.dispatchData = function(payload){var entryoutview = document.getElementById('entryoutput');entryoutview.innerHTML = '';`)
 	}
 
 	for i, param := range v.params {
