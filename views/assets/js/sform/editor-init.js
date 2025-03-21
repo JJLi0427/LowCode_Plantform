@@ -1,10 +1,6 @@
 var langTools = ace.require("ace/ext/language_tools");
 var snippetManager = ace.require("ace/snippets").snippetManager;
 
-// var htmlResultEditor = ace.edit("html-result-editor");
-// htmlResultEditor.setTheme("ace/theme/monokai");
-// htmlResultEditor.session.setMode("ace/mode/html");
-
 var editor = ace.edit("editor");
 editor.setOptions({
     enableBasicAutocompletion:false,
@@ -49,8 +45,6 @@ var formBuilderCompleter = {
 langTools.setCompleters([]);
 // finally, bind to langTools:
 langTools.addCompleter(formBuilderCompleter);
-
-
 
 var snippets = [];// snippetManager.parseSnippetFile("snippet test\n  TEST!");
 snippets.push({
@@ -114,9 +108,7 @@ snippets.push({
     tabTrigger: "f-gaddress"
 });
 
-
 snippetManager.register(snippets, "formbuilder");
-
 
 function initAddButtons() {
    document.querySelectorAll(".add-item").forEach(el => {
@@ -130,17 +122,10 @@ initAddButtons();
 
 let sharedHtml;
 function getHtml() {
-    sharedHtml = `<!-- this should be placed in the HEAD -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/danbars/form-builder@0.1/dist/themes/default.imports.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/danbars/form-builder@0.1/dist/themes/default.css">
-<div id="form" class="fb-theme-default">
-${formHtml}
-</div>`;
+    sharedHtml = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/danbars/form-builder@0.1/dist/themes/default.imports.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/danbars/form-builder@0.1/dist/themes/default.css"><div id="form" class="fb-theme-default">${formHtml}</div>`;
     document.querySelector("#html-result-editor code").innerHTML = escapeHtml(sharedHtml);
     // document.querySelector("#copyToClipboard").dataset.dataClipboardText = formHtml;
-    uglipop({class:'my-styling-class', //styling class for Modal
-        source:'div', //'div' instead of 'html'
-        content:'html-result'});
+    uglipop({class:'my-styling-class', source:'div', content:'html-result'});
 }
 
 document.querySelector("#gethtml").onclick = getHtml;
@@ -175,35 +160,14 @@ function parseForm() {
     parser.feed(formText);
     let formJson = parser.results[0];
     console.log(formJson);
-//        jsonResultEditor.setValue(JSON.stringify(formJson, null,2));
     formHtml = builder(formJson);
-    // setInnerHtml(document.querySelector("#form"), formHtml);
     document.querySelector("#form").innerHTML = formHtml;
     updateViewer("#form");
 }
 parseForm(); //first time
 
-// function setInnerHtml (elm, html) {
-//     elm.innerHTML = html;
-//     Array.from(elm.querySelectorAll("script")).forEach( oldScript => {
-//         const newScript = document.createElement("script");
-//         Array.from(oldScript.attributes)
-//             .forEach( attr => newScript.setAttribute(attr.name, attr.value) );
-//         newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-//         oldScript.parentNode.replaceChild(newScript, oldScript);
-//     });
-// }
-
-
 function escapeHtml(text) {
-    var map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-
+    var map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
@@ -227,11 +191,7 @@ function handleCopy() {
     });
 }
 
-
-
 handleCopy();
-
-
 //side panel trigger
 (function(){
     // Slide In Panel - by CodyHouse.co

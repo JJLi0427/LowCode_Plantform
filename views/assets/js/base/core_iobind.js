@@ -193,17 +193,6 @@ window.AsyncPostJsonData = function(url, payload, onsuccess, onerror) {
   xhr.send(payload)
 }
 
-//function ReWriteFormData(form_data) {
-//  //$1...$n
-//
-//  if (form_data.has('key')) {
-//    let fn_cmd_key = '(val) =>{}';
-//    form_data.set('key', fn_cmd_key(form_data.get('key')))
-//  }
-//
-//    return form_data;
-//}
-
 function AsyncPostDataRegisterUrl(url) {
 
   window.AsyncPostDataAutoUrl = function(payload, onsuccess, onerror) {
