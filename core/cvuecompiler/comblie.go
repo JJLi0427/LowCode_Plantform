@@ -23,16 +23,7 @@ func trimQ(s string) string {
 
 func init() {
 	vueexportdefaulttokens = append(vueexportdefaulttokens, "methods", "name", "components", "data", "watch")
-	vuecomponenttokens = append(vuecomponenttokens,
-		"<template>",
-		"<template ",
-		"</template>",
-		"<script>",
-		"<script ",
-		"</script>",
-		"<style ",
-		"<style>",
-		"</style>")
+	vuecomponenttokens = append(vuecomponenttokens, "<template>", "<template ", "</template>", "<script>", "<script ", "</script>", "<style ", "<style>", "</style>")
 
 	for _, e := range vueexportdefaulttokens {
 		if len(e) > vueexportdefaulttokensmaxlen {
