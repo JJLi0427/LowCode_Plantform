@@ -1,7 +1,7 @@
-name: image-converter
+name: image_converter
 
 head:
-  title: "万能图像格式、尺寸等-在线转换器"
+  title: "万能图像格式&尺寸-在线转换器"
   summary: ""
   description: 图片格式转换器,完美支持各种格式转换,常用图片格式转换,支持图片尺寸修改,repeat平铺拼图缝合背景,证件照换背景底色
   keywords:
@@ -23,7 +23,7 @@ head:
   icon:
   ogs: 
    - {property: og:type, content: website}
-   - {property: og:title, content: 万能图像格式、尺寸等-在线转换器}
+   - {property: og:title, content: 万能图像格式&尺寸-在线转换器}
    - {property: og:description, content: 图片格式转换器,完美支持各种格式转换,常用图片格式转换,支持图片尺寸修改,repeat平铺拼图缝合背景,证件照换背景底色}
 
 
@@ -42,7 +42,7 @@ entrypoint:
     if [ ${#arg_o} -gt 0 ];then
       opt=${arg_o}
     fi
-    ./imageConverter $arg_s $dst $w $h $opt
+    ./image_converter $arg_s $dst $w $h $opt
     echo "GeneratedFile ${dst}"
 
   workdir: bin

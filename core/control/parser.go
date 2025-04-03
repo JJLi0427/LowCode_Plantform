@@ -17,7 +17,7 @@ import (
 
 const (
 	RootViewPath string = "views"
-	AppRootPath  string = "gapplications"
+	AppRootPath  string = "lowcode-plantform"
 	RootAppName  string = "_root"
 )
 

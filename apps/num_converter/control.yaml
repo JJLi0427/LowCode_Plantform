@@ -1,4 +1,4 @@
-name: numconvert
+name: num_converter
 
 head:
   title: "进制转换器"

@@ -1,4 +1,4 @@
-name: filediff
+name: file_diff
 
 head:
   title: "在线文件对比"

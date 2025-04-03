@@ -1,4 +1,4 @@
-name: jsonxmlformat
+name: json_xml_format
 
 head:
   title: "json，xml格式化展示"

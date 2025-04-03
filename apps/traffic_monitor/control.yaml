@@ -1,4 +1,4 @@
-name: trafficmonitor
+name: traffic_monitor
 
 head:
   title: "流量监测"
