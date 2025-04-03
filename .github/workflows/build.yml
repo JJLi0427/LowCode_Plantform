@@ -11,6 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     
+    strategy:
+      matrix:
+        os: [linux, macos, win]
+        arch: [amd64, arm64]
+      fail-fast: false
+    env:
+      tag: ${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || '' }}
+    
     steps:
     - uses: actions/checkout@v3
     
@@ -21,21 +29,25 @@ jobs:
         check-latest: true
 
     - name: Install dependencies for C++
+      if: matrix.os == 'linux'
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential libcurl4-openssl-dev libopencv-dev libmysqlclient-dev
 
     - name: Compile ip_tracker
+      if: matrix.os == 'linux'
       run: |
         mkdir -p apps/ip_tracker/bin
         g++ -std=c++11 -o apps/ip_tracker/bin/ip_tracker apps/ip_tracker/ip_tracker.cpp -lcurl
 
     - name: Compile image_converter
+      if: matrix.os == 'linux'
       run: |
         mkdir -p apps/image_converter/bin
         g++ -std=c++11 -o apps/image_converter/bin/image_converter apps/image_converter/image_converter.cpp `pkg-config --cflags --libs opencv4`
 
     - name: Compile dbuser_manager
+      if: matrix.os == 'linux'
       run: |
         mkdir -p apps/dbuser_manager/bin
         g++ -std=c++11 -o apps/dbuser_manager/bin/dbuser_manager apps/dbuser_manager/dbuser_manager.cpp -lmysqlclient
@@ -86,12 +98,12 @@ jobs:
     - name: Build Go application
       run: |
         mkdir -p build/
-        go build -o build/run main.go
+        GOOS=$(echo "${{ matrix.os }}" | sed 's/-latest//') GOARCH=${{ matrix.arch }} go build -o build/run-${{ matrix.os }}-${{ matrix.arch }} main.go
         cp -r views build/
         cp -r apps build/
-    
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: lowcode-platform-${{ github.ref_name }}-${{ github.run_id }}
+        name: lowcode-platform-${{ matrix.os }}${{ matrix.arch }}-${{ env.tag }}
         path: build/
