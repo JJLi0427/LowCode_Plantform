@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [linux, darwin, windows]
-        arch: [amd64, arm]
+        arch: [amd64, arm64]
       fail-fast: false
     env:
       tag: ${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || '' }}
