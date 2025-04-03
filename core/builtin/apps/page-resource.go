@@ -3,8 +3,8 @@ package apps
 import (
 	"bytes"
 	"fmt"
-	"onlinetools/core/control"
-	"onlinetools/core/htmlrender"
+	"lowcode/core/control"
+	"lowcode/core/htmlrender"
 	"path"
 	"path/filepath"
 	"time"

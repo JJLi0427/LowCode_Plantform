@@ -1,0 +1,62 @@
+name: image_converter
+
+head:
+  title: "万能图像格式&尺寸-在线转换器"
+  summary: ""
+  description: 图片格式转换器,完美支持各种格式转换,常用图片格式转换,支持图片尺寸修改,repeat平铺拼图缝合背景,证件照换背景底色
+  keywords:
+    - PNG转JPG
+    - ICO转PNG
+    - 转PNG
+    - 转JPEG
+    - 转GIF
+    - 转BMP
+    - 转ICO
+    - 转TIFF
+    - 转WebP
+    - 转AVIF
+    - 转PNM
+
+  links:
+    - /assets/css/entrypoint-form/theme.css
+    - /assets/css/entrypoint-form/inline.css
+  icon:
+  ogs: 
+   - {property: og:type, content: website}
+   - {property: og:title, content: 万能图像格式&尺寸-在线转换器}
+   - {property: og:description, content: 图片格式转换器,完美支持各种格式转换,常用图片格式转换,支持图片尺寸修改,repeat平铺拼图缝合背景,证件照换背景底色}
+
+
+entrypoint:
+  inline_shell: |
+    src="$arg_s"
+    dst="${src%.*}.${arg_f}"
+    dst="${dst##*/}"
+    w=0
+    h=0
+    opt="scale"
+    if [ ${#arg_h} -gt 0 ] && [ ${arg_w} -gt 0 ];then
+      w=${arg_w}
+      h=${arg_h}
+    fi
+    if [ ${#arg_o} -gt 0 ];then
+      opt=${arg_o}
+    fi
+    ./image_converter $arg_s $dst $w $h $opt
+    echo "GeneratedFile ${dst}"
+
+  workdir: bin
+  trace: true
+  paramsinview:
+    - <h1 style="text-align:center;">万能图像格式、尺寸等-在线转换器</h1>
+    - -s:选择源图片文件{file[accept=".jpg,.jpeg,.png,.gif,.bmp,.ico,.webp,.tiff,.avif,.pnm" required _maxsize=8MB]}.file
+    - -f:选择目标文件格式{radio[required]:png/PNG,jpg/JPEG,gif/GIF,bmp/BMP,ico/ICO,webp/WebP,tiff/TIFF,avif/AVIF}
+    - -a:高级设置{checkbox[_default="xx"]:advance/打开高级选项}
+    - -w:宽度{number[placeholder="设置图片宽度" required _depend="$3=='advance'"]}
+    - -h:高度{number[placeholder="设置图片高度" required _depend="$3=='advance'"]}
+    - -o:是否平铺?{checkbox[_depend="$3=='advance'"]:tile/平铺拼图}
+    - -c:证件照换背景底色{color[_depend="false"]}
+  resultsinview:
+    - <h3>执行结果:</h3>
+    - GeneratedFile:{img[width="200"]}.file
+    - GeneratedFile:Download{a[download]}.file

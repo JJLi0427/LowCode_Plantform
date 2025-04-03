@@ -2,9 +2,9 @@ package htmlrender
 
 import (
 	"fmt"
-	"onlinetools/core/common/file"
-	"onlinetools/core/htmlrender/markdown"
-	"onlinetools/core/sitemap"
+	"lowcode/core/common/file"
+	"lowcode/core/htmlrender/markdown"
+	"lowcode/core/sitemap"
 	"os"
 	"path/filepath"
 	"time"

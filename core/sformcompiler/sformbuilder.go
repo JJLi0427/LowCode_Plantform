@@ -3,7 +3,7 @@ package sformcompiler
 import (
 	"bytes"
 	"fmt"
-	"onlinetools/core/control"
+	"lowcode/core/control"
 )
 
 type SFormBuilder struct {

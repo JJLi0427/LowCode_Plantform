@@ -1,11 +1,11 @@
 package cvuecompiler
 
 import (
-    "fmt"
-    "onlinetools/core/control"
-    "os"
-    "path/filepath"
-    "strings"
+	"fmt"
+	"lowcode/core/control"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type componentSet struct {

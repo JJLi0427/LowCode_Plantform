@@ -11,7 +11,7 @@ case "$OSTYPE" in
 esac
 }
 
-EXENANME='webtools'
+EXENANME='run'
 OS=$(systemOS)
 if [[ ${OS} =~ 'WINDOWS' ]];then
 EXENANME="${EXENANME}.exe"
@@ -76,18 +76,14 @@ else
 
  [ -d build ] && rm -rf build
 
- mkdir -p build/webtools
+ mkdir -p build/
 
- go build -o build/webtools/${EXENANME}  main.go
+ go build -o build/${EXENANME}  main.go
 
- cp -r views build/webtools/
+ cp -r views build/
 
- cp -r apps  build/webtools/
+ cp -r apps  build/
+ cd build/apps
+ ./build_apps.sh
 
 fi
-
-#cp -r schema-exec build/webtools/readme
-
-
-
-

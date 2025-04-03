@@ -2,7 +2,7 @@ package appplugin
 
 import (
 	"fmt"
-	"onlinetools/core/control"
+	"lowcode/core/control"
 	"path"
 	"strings"
 

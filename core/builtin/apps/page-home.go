@@ -1,11 +1,11 @@
 package apps
 
 import (
-	"fmt"
 	"encoding/json"
-	"onlinetools/core/control"
-	"onlinetools/core/appplugin"
-	"onlinetools/core/htmlrender"
+	"fmt"
+	"lowcode/core/appplugin"
+	"lowcode/core/control"
+	"lowcode/core/htmlrender"
 )
 
 

@@ -1,12 +1,13 @@
 package appplugin
 
 import (
-    "sync"
-    "bytes"
-    "strings"
-    "github.com/blevesearch/bleve/v2"
-	"onlinetools/core/control"
-    "path/filepath"
+	"bytes"
+	"lowcode/core/control"
+	"path/filepath"
+	"strings"
+	"sync"
+
+	"github.com/blevesearch/bleve/v2"
 )
 
 var _defaultAppHub *AppHub

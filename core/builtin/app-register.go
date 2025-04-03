@@ -1,8 +1,8 @@
 package builtin
 
 import (
-	"onlinetools/core/builtin/apps"
-	"onlinetools/core/control"
+	"lowcode/core/builtin/apps"
+	"lowcode/core/control"
 )
 
 func RegisterApps() {

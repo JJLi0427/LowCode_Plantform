@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"onlinetools/core/common/tmpl"
-	"onlinetools/core/htmlrender"
+	"lowcode/core/common/tmpl"
+	"lowcode/core/htmlrender"
 	"os"
 	"path"
 	"path/filepath"
@@ -17,7 +17,7 @@ import (
 
 const (
 	RootViewPath string = "views"
-	AppRootPath  string = "gapplications"
+	AppRootPath  string = "lowcode-plantform"
 	RootAppName  string = "_root"
 )
 
