@@ -13,8 +13,8 @@ jobs:
     
     strategy:
       matrix:
-        os: [linux, macos, win]
-        arch: [amd64, arm64]
+        os: [linux, darwin, windows]
+        arch: [amd64, arm]
       fail-fast: false
     env:
       tag: ${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || '' }}
@@ -105,5 +105,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: lowcode-platform-${{ matrix.os }}${{ matrix.arch }}-${{ env.tag }}
+        name: lowcode-platform-${{ matrix.os == 'darwin' && 'macos' || matrix.os }}${{ matrix.arch }}-${{ env.tag }}
         path: build/
