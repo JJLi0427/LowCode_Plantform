@@ -28,17 +28,17 @@ jobs:
     - name: Compile ip_tracker
       run: |
         mkdir -p apps/ip_tracker/bin
-        g++ -std=c++11 -o apps/ip_tracker/ip_tracker apps/ip_tracker/bin/ip_tracker.cpp -lcurl
+        g++ -std=c++11 -o apps/ip_tracker/bin/ip_tracker apps/ip_tracker/ip_tracker.cpp -lcurl
 
     - name: Compile image_converter
       run: |
         mkdir -p apps/image_converter/bin
-        g++ -std=c++11 -o apps/image_converter/image_converter apps/image_converter/bin/image_converter.cpp `pkg-config --cflags --libs opencv4`
+        g++ -std=c++11 -o apps/image_converter/bin/image_converter apps/image_converter/image_converter.cpp `pkg-config --cflags --libs opencv4`
 
     - name: Compile dbuser_manager
       run: |
         mkdir -p apps/dbuser_manager/bin
-        g++ -std=c++11 -o apps/dbuser_manager/dbuser_manager apps/dbuser_manager/bin/dbuser_manager.cpp -lmysqlclient
+        g++ -std=c++11 -o apps/dbuser_manager/bin/dbuser_manager apps/dbuser_manager/dbuser_manager.cpp -lmysqlclient
 
     - name: Create asset directories
       run: |
