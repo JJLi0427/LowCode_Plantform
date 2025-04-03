@@ -3,10 +3,10 @@ package appplugin
 import (
 	"bytes"
 	"fmt"
+	"lowcode/core/common/file"
+	"lowcode/core/control"
+	"lowcode/core/sformcompiler"
 	"net/http"
-	"onlinetools/core/common/file"
-	"onlinetools/core/control"
-	"onlinetools/core/sformcompiler"
 	"os"
 	"os/exec"
 	"path"

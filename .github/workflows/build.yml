@@ -1,10 +1,10 @@
 name: Build LowCode Platform
 
 on:
-  push:
-    branches: [ main, master ]
+  push: # Trigger on push to any branch
+    branches: ["*"]
   pull_request:
-    branches: [ main, master ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -19,7 +19,27 @@ jobs:
       with:
         go-version: '1.20'
         check-latest: true
-    
+
+    - name: Install dependencies for C++
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libcurl4-openssl-dev libopencv-dev libmysqlclient-dev
+
+    - name: Compile ip_tracker
+      run: |
+        mkdir -p apps/ip_tracker/bin
+        g++ -std=c++11 -o apps/ip_tracker/ip_tracker apps/ip_tracker/bin/ip_tracker.cpp -lcurl
+
+    - name: Compile image_converter
+      run: |
+        mkdir -p apps/image_converter/bin
+        g++ -std=c++11 -o apps/image_converter/image_converter apps/image_converter/bin/image_converter.cpp `pkg-config --cflags --libs opencv4`
+
+    - name: Compile dbuser_manager
+      run: |
+        mkdir -p apps/dbuser_manager/bin
+        g++ -std=c++11 -o apps/dbuser_manager/dbuser_manager apps/dbuser_manager/bin/dbuser_manager.cpp -lmysqlclient
+
     - name: Create asset directories
       run: |
         mkdir -p views/assets/thirdparties/vuetify
@@ -63,15 +83,15 @@ jobs:
           }
         done
     
-    - name: Build
+    - name: Build Go application
       run: |
-        mkdir -p build/webtools
-        go build -o build/webtools/webtools main.go
-        cp -r views build/webtools/
-        cp -r apps build/webtools/
+        mkdir -p build/
+        go build -o build/run main.go
+        cp -r views build/
+        cp -r apps build/
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: webtools
-        path: build/webtools/
+        name: lowcode-platform-${{ github.ref_name }}-${{ github.run_id }}
+        path: build/

@@ -1,4 +1,4 @@
-module onlinetools
+module lowcode
 
 go 1.19
 

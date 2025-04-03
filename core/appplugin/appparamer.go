@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"lowcode/core/control"
+	"lowcode/core/sformcompiler"
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"onlinetools/core/control"
-	"onlinetools/core/sformcompiler"
 	"os"
 	"os/exec"
 	"path"
@@ -376,9 +376,9 @@ func (a *appParam) SetContentBytes(con []byte) {
 	if a.paramType != FILE {
 		a.content = con
 	} else {
-		fmode := "onlinetool.*" + contentFileExt(a.contentType)
+		fmode := "tmp.*" + contentFileExt(a.contentType)
 		if len(a.hintFileExt) > 0 {
-			fmode = "onlinetool.*" + a.hintFileExt
+			fmode = "tmp.*" + a.hintFileExt
 		}
 		if file, err := os.CreateTemp(os.TempDir(), fmode); err == nil {
 			defer file.Close()
@@ -396,9 +396,9 @@ func (a *appParam) SetContentMultipart(f []*multipart.FileHeader) error {
 			defer srcfile.Close()
 			//os.Stat(filepath.Join(os.TempDir(), srcfile.Name()))
 
-			fmode := "onlinetool.*" + contentFileExt(a.contentType)
+			fmode := "tmp.*" + contentFileExt(a.contentType)
 			if len(a.hintFileExt) > 0 {
-				fmode = "onlinetool.*" + a.hintFileExt
+				fmode = "tmp.*" + a.hintFileExt
 			}
 			if file, err := os.CreateTemp(os.TempDir(), fmode); err == nil {
 				defer file.Close()

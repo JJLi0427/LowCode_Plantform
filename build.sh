@@ -11,7 +11,7 @@ case "$OSTYPE" in
 esac
 }
 
-EXENANME='lowcode_plantform'
+EXENANME='run'
 OS=$(systemOS)
 if [[ ${OS} =~ 'WINDOWS' ]];then
 EXENANME="${EXENANME}.exe"
@@ -83,5 +83,7 @@ else
  cp -r views build/
 
  cp -r apps  build/
+ cd build/apps
+ ./build_apps.sh
 
 fi
