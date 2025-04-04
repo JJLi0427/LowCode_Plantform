@@ -13,7 +13,7 @@ private:
 public:
     UserPermissionManager(const std::string& host, unsigned int port, 
         const std::string& user, const std::string& password
-    ) : logFile("/tmp/dbuser_manager.log", std::ios::app) {
+    ) : logFile("/tmp/dbuser_manager.log", std::ios::out) {
         if (!logFile.is_open()) {
             throw std::runtime_error("Failed to open log file");
         }
