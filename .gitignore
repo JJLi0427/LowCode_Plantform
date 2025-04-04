@@ -1,7 +1,6 @@
 # build directory
 build
-*/bin
-
+**/bin
 # dependencies
 views/assets/thirdparties
 views/assets/css/sform/fontawesome
