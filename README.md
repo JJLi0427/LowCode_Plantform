@@ -18,6 +18,9 @@ In `apps` dir, some tools for ops management as smaple, you can add any tools li
 
 ## How to Use
 
-1. Download latest release package and run it, you only need to move your apps to `apps` dir.
+1. Clone the source code and run `./build.sh` build project by yourself.
 
-2. Clone the source code and run `./build.sh` build project by yourself.
+2. Move your apps to `./build/apps` dir.
+
+3. Build sample apps through run `./build/apps/build_apps.sh`
+

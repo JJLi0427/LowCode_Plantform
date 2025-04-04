@@ -21,7 +21,6 @@ head:
 
 entrypoint:
   inline_shell: |
-    echo $(pwd)
     type=0
     if [ ${#arg_t} -gt 0 ];then
       type=${arg_t}

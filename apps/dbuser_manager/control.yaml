@@ -1,0 +1,73 @@
+name: dbuser_manager
+
+head:
+  title: "数据库用户管理"
+  summary: ""
+  description: 管理数据库用户的权限, 包括创建、删除、修改用户表权限等, 支持MySQL
+  keywords:
+    - 数据库
+    - MySQL
+    - 用户
+    - 权限
+    - 管理
+  links:
+    - /assets/css/entrypoint-form/theme.css
+    - /assets/css/entrypoint-form/inline.css
+  icon:
+  ogs: 
+   - {property: og:type, content: website}
+   - {property: og:title, content: 数据库用户管理}
+   - {property: og:description, content: 管理数据库用户的权限, 包括创建、删除、修改用户表权限等, 支持MySQL}
+
+
+entrypoint:
+  inline_shell: |
+    echo "run type: $arg_op"
+    echo "host: $arg_host"
+    echo "port: $arg_port"
+    echo "user: $arg_user"
+    echo "password: $arg_password"
+    echo "op_user: $arg_op_user"
+    echo "op_password: $arg_op_password"
+    echo "op_db: $arg_op_db"
+    echo "op_table: $arg_op_table"
+    echo "op_type: $arg_op_type"
+    run_flag=1
+    if [ ${#arg_op} = "1" ];then
+      ./dbuser_manager $arg_host $arg_port $arg_user $arg_password $arg_op $arg_op_user $arg_op_password
+    elif [ ${#arg_op} = "2" ];then
+      ./dbuser_manager $arg_host $arg_port $arg_user $arg_password $arg_op $arg_op_user
+    elif [ ${#arg_op} = "3" ];then
+      ./dbuser_manager $arg_host $arg_port $arg_user $arg_password $arg_op $arg_op_user $arg_op_db $arg_op_table $arg_op_type
+    elif [ ${#arg_op} = "4" ];then
+      ./dbuser_manager $arg_host $arg_port $arg_user $arg_password $arg_op $arg_op_user $arg_op_db $arg_op_table $arg_op_type
+    elif [ ${#arg_op} = "5" ];then
+      ./dbuser_manager $arg_host $arg_port $arg_user $arg_password $arg_op $arg_op_user
+    else
+      echo "Invalid operation"
+      run_flag=0
+      exit 1
+    fi
+    if [ run_flag = 1 ];then
+      echo "GeneratedFile ${apppagepath}/ip.txt"
+      cp -r /tmp/dbuser_manager.log ${apppagepath}/dbuser_manager.log
+    fi
+
+  workdir: bin
+  trace: true
+  paramsinview:
+    - <h1 style="text-align:center;">数据库用户管理</h1>
+    - -host:地址{text[placeholder='localhost' _inline='true']}
+    - -port:端口{text[placeholder='3306' _inline='true']}
+    - -user:用户{text[placeholder='root' _inline='true']}
+    - -password:密码{text[placeholder='password' _inline='true']}
+    - -op:选择操作{radio[_default="0"]:1/添加用户,2/删除用户,3/添加权限,4/移除权限,5/查询权限}
+    - -op_user:目标用户名{text[placeholder='username' _inline='true']}
+    - -op_password:用户密码{text[placeholder='password' _inline='true', _depend="$5=='1'"]}
+    - -op_db:目标数据库{text[placeholder='db_name' _depend="$5=='3'||$5=='4'"]}
+    - -op_table:目标表名{text[placeholder='table_name' _depend="$5=='3'||$5=='4'"]}
+    - -op_type:权限类型{text[placeholder='ALL, SELECT, INSERT, UPDATE, DELETE' _depend="$5=='3'||$5=='4'"]}
+
+  resultsinview:
+    - <h3>操作日志:</h3>
+    - <iframe src="http://localhost:8088/lowcode-plantform/dbuser_manager/dbuser_manager.log" height="500"></iframe>
