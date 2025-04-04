@@ -63,7 +63,7 @@ done
 
 if [ ${#app} -gt 2 ];then
 
- go build -o ${EXENANME} main.go
+ CGO_ENABLED=0 go build -a -installsuffix cgo -o ${EXENANME} main.go
 
 devapps="apps"
  if [ ${#apppath} -gt 3 ] && [ -d $apppath ];then
@@ -78,7 +78,7 @@ else
 
  mkdir -p build/
 
- go build -o build/${EXENANME}  main.go
+ CGO_ENABLED=0 go build -a -installsuffix cgo -o build/${EXENANME}  main.go
 
  cp -r views build/
 
