@@ -130,7 +130,7 @@ jobs:
       with:
         images: jjli427/lowcode-plantform
         tags: |
-          type=raw,value=${{ github.ref_name }}-${{ github.run_id }}
+          type=raw,value=${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || 'latest' }}
 
     - name: Build and push
       uses: docker/build-push-action@v6

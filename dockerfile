@@ -8,26 +8,28 @@ RUN apk update && apk add --no-cache \
     opencv-dev \
     mariadb-dev \
     curl-dev \
-    build
+    bash
 
 WORKDIR /LowCode_Builder
 COPY ${TARGETARCH}/ .
 
-RUN ls apps
 RUN chmod +x ./apps/build_apps.sh && \
     ./apps/build_apps.sh
 
+
+
 FROM alpine:latest
 
-RUN apk update
-RUN apk add --no-cache libstdc++
-RUN apk add --no-cache libcurl
-RUN apk add --no-cache mariadb-connector-c
-RUN apk add --no-cache opencv
-RUN apk add --no-cache bash
+RUN apk update && apk add --no-cache libstdc++ \
+    mariadb-connector-c \
+    opencv \
+    libcurl \
+    bash
 
 WORKDIR /LowCode_Docker
 COPY --from=builder /LowCode_Builder/ .
+
+RUN chmod +x ./run
 
 EXPOSE 8088
 
