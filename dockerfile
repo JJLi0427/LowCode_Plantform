@@ -4,8 +4,7 @@ RUN apk add --no-cache bash
 
 WORKDIR /LowCode_Docker
 
-# Copy pre-built artifacts from the build directory
-COPY ./ ./
+COPY ./${TARGETARCH}/* .
 
 EXPOSE 8088
 
