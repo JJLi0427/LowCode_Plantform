@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     
     strategy:
-      matrix: ${{fromJson(needs.SetMatrix.outputs.matrix)}}
+      matrix: ${{fromJson(needs.SetJobs.outputs.matrix)}}
       fail-fast: false
     
     steps:
