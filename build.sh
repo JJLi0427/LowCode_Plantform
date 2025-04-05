@@ -83,7 +83,6 @@ else
  cp -r views build/
 
  cp -r apps  build/
- cd build/apps
- ./build_apps.sh
+ ./apps/build_apps.sh
 
 fi
