@@ -74,12 +74,53 @@ jobs:
     - name: Build Go application
       run: |
         mkdir -p build/
-        GOOS=$(echo "${{ matrix.os }}" | sed 's/-latest//') GOARCH=${{ matrix.arch }} go build -o build/run-${{ matrix.os }}-${{ matrix.arch }} main.go
+        BUILD_OS="${{ matrix.os }}"
+        BUILD_ARCH="${{ matrix.arch }}"
+        GOOS=$(echo "$BUILD_OS" | sed 's/-latest//')
+        WIN_SUFFIX=""
+        if [ "$BUILD_OS" = "windows" ]; then
+          WIN_SUFFIX=".exe"
+        fi
+        CGO_ENABLED=0 go build -o build/run-${GOOS}-${BUILD_ARCH}${WIN_SUFFIX} main.go
         cp -r views build/
         cp -r apps build/
-
+    
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: LowCode_Plantform-${{ matrix.os == 'darwin' && 'macos' || matrix.os }}-${{ matrix.arch }}${{ env.tag }}
         path: build/
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: LowCode_Plantform-linux-amd64${{ env.tag }}
+        path: ./build
+
+    - name: Build sample apps
+      run: |
+        apt-get update
+        apt-get install -y build-essential pkg-config libopencv-dev default-libmysqlclient-dev libcurl4-openssl-dev
+
+        cd build/apps
+        mkdir -p ip_tracker/bin
+        mkdir -p image_converter/bin
+        mkdir -p dbuser_manager/bin
+        
+        g++ -std=c++11 $STATIC_FLAG -o ip_tracker/bin/ip_tracker ip_tracker/ip_tracker.cpp -lcurl
+        g++ -std=c++11 $STATIC_FLAG -o image_converter/bin/image_converter image_converter/image_converter.cpp `pkg-config --cflags --libs opencv4`
+        g++ -std=c++11 $STATIC_FLAG -o dbuser_manager/bin/dbuser_manager dbuser_manager/dbuser_manager.cpp -lmysqlclient
+
+    - name: Build and push Docker image
+      env:
+        DOCKER_IMAGE: jjli427/lowcode-platform
+        DOCKER_TAG: ${{ github.ref_name }}-latest
+      run: |
+        docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./build
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        docker push $DOCKER_IMAGE:$DOCKER_TAG
