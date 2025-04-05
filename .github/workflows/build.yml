@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  type=raw,value=${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || 'latest' }}
+  tag: ${{ github.ref_name != 'main' && format('-{0}-{1}', github.ref_name, github.run_id) || '' }}
 
 jobs:
   SetJobs:
@@ -143,7 +143,7 @@ jobs:
       with:
         images: jjli427/lowcode-plantform
         tags: |
-          type=raw,value=${{ github.ref_name != 'main' && github.run_id || 'latest' }}
+          type=raw,value=${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || 'latest' }}
 
     - name: Build and push
       uses: docker/build-push-action@v6
