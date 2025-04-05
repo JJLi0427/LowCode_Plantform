@@ -8,20 +8,35 @@ on:
   workflow_dispatch:
 
 env:
-  tag: ${{ github.ref_name != 'main' && format('-{0}-{1}', github.ref_name, github.run_id) || '' }}
+  type=raw,value=${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || 'latest' }}
 
 jobs:
-  build:
+  SetJobs:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    
+    steps:
+    - id: set-matrix
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          # Include all platforms for manual runs
+          echo "matrix={\"include\":[{\"os\":\"linux\",\"arch\":\"amd64\"},{\"os\":\"linux\",\"arch\":\"arm64\"},{\"os\":\"darwin\",\"arch\":\"amd64\"},{\"os\":\"darwin\",\"arch\":\"arm64\"},{\"os\":\"windows\",\"arch\":\"amd64\"},{\"os\":\"windows\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
+        else
+          # Only Linux for automated runs
+          echo "matrix={\"include\":[{\"os\":\"linux\",\"arch\":\"amd64\"},{\"os\":\"linux\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
+        fi
+
+  BuildCode:
+    needs: SetJobs
     runs-on: ubuntu-latest
     
     strategy:
-      matrix:
-        os: [linux, darwin, windows]
-        arch: [amd64, arm64]
+      matrix: ${{fromJson(needs.SetMatrix.outputs.matrix)}}
       fail-fast: false
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -92,25 +107,23 @@ jobs:
         name: LowCode_Plantform-${{ matrix.os }}-${{ matrix.arch }}${{ env.tag }}
         path: build/
 
-  docker:
-    needs: build
+  MakeImage:
+    needs: BuildCode
     runs-on: ubuntu-latest
+    if: github.ref_name == 'main' || github.ref_name == 'docker' || github.event_name == 'workflow_dispatch'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
     - name: Download amd64 build artifact
       uses: actions/download-artifact@v4
       with:
         name: LowCode_Plantform-linux-amd64${{ env.tag }}
-        path: ./build/amd64
+        path: amd64/
 
     - name: Download arm64 build artifact
       uses: actions/download-artifact@v4
       with:
         name: LowCode_Plantform-linux-arm64${{ env.tag }}
-        path: ./build/arm64
+        path: arm64/
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -130,13 +143,13 @@ jobs:
       with:
         images: jjli427/lowcode-plantform
         tags: |
-          type=raw,value=${{ github.ref_name != 'main' && format('{0}-{1}', github.ref_name, github.run_id) || 'latest' }}
+          type=raw,value=${{ github.ref_name != 'main' && github.run_id || 'latest' }}
 
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
-        context: ./build
-        file: ./dockerfile
+        context: .
+        file: amd64/apps/Dockerfile
         push: true
         platforms: linux/amd64,linux/arm64
         tags: ${{ steps.meta.outputs.tags }}
