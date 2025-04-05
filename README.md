@@ -18,9 +18,9 @@ In `apps` dir, some tools for ops management as smaple, you can add any tools li
 
 ## How to Use
 
-1. Clone the source code and run `./build.sh` build project by yourself.
+1. Clone the source code and run `./build.sh` build LowCode_Plantform by yourself.
 
 2. Move your apps to `./build/apps` dir.
 
-3. Build sample apps through run `./build/apps/build_apps.sh`
+3. Build sample apps through run `./build/apps/build_apps.sh`, you need to install lib before run it.
 
