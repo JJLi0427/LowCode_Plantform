@@ -66,26 +66,17 @@ jobs:
         name: views
         path: views/
 
-
-  SetJobs:
-    needs: ViewDependencies
-    runs-on: ubuntu-latest
-    outputs:
-      linux_matrix: ${{ steps.set-matrix.outputs.linux_matrix }}
-      nonlinux_matrix: ${{ steps.set-matrix.outputs.nonlinux_matrix }}
-    
-    steps:
-    - id: set-matrix
-      run: |
-        echo "linux_matrix={\"include\":[{\"os\":\"linux\",\"arch\":\"amd64\"},{\"os\":\"linux\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
-        echo "nonlinux_matrix={\"include\":[{\"os\":\"darwin\",\"arch\":\"amd64\"},{\"os\":\"darwin\",\"arch\":\"arm64\"},{\"os\":\"windows\",\"arch\":\"amd64\"},{\"os\":\"windows\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
-
   BuildLinux:
-    needs: SetJobs
+    needs: ViewDependencies
     runs-on: ubuntu-latest
     
     strategy:
-      matrix: ${{fromJson(needs.SetJobs.outputs.linux_matrix)}}
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
       fail-fast: false
     
     steps:
@@ -124,12 +115,21 @@ jobs:
         path: build/
 
   NonLinux:
-    needs: SetJobs
+    needs: ViewDependencies
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     
     strategy:
-      matrix: ${{fromJson(needs.SetJobs.outputs.nonlinux_matrix)}}
+      matrix:
+        include:
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+          - os: windows
+            arch: amd64
+          - os: windows
+            arch: arm64
       fail-fast: false
     
     steps:
