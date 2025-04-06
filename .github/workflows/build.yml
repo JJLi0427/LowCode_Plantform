@@ -71,25 +71,21 @@ jobs:
     needs: ViewDependencies
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      linux_matrix: ${{ steps.set-matrix.outputs.linux_matrix }}
+      nonlinux_matrix: ${{ steps.set-matrix.outputs.nonlinux_matrix }}
     
     steps:
     - id: set-matrix
       run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          # Include all platforms for manual runs
-          echo "matrix={\"include\":[{\"os\":\"linux\",\"arch\":\"amd64\"},{\"os\":\"linux\",\"arch\":\"arm64\"},{\"os\":\"darwin\",\"arch\":\"amd64\"},{\"os\":\"darwin\",\"arch\":\"arm64\"},{\"os\":\"windows\",\"arch\":\"amd64\"},{\"os\":\"windows\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
-        else
-          # Only Linux for automated runs
-          echo "matrix={\"include\":[{\"os\":\"linux\",\"arch\":\"amd64\"},{\"os\":\"linux\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
-        fi
+        echo "linux_matrix={\"include\":[{\"os\":\"linux\",\"arch\":\"amd64\"},{\"os\":\"linux\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
+        echo "nonlinux_matrix={\"include\":[{\"os\":\"darwin\",\"arch\":\"amd64\"},{\"os\":\"darwin\",\"arch\":\"arm64\"},{\"os\":\"windows\",\"arch\":\"amd64\"},{\"os\":\"windows\",\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
 
-  BuildCode:
+  BuildLinux:
     needs: SetJobs
     runs-on: ubuntu-latest
     
     strategy:
-      matrix: ${{fromJson(needs.SetJobs.outputs.matrix)}}
+      matrix: ${{fromJson(needs.SetJobs.outputs.linux_matrix)}}
       fail-fast: false
     
     steps:
@@ -127,8 +123,52 @@ jobs:
         name: LowCode_Plantform-${{ matrix.os }}-${{ matrix.arch }}${{ env.tag }}
         path: build/
 
+  NonLinux:
+    needs: SetJobs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    
+    strategy:
+      matrix: ${{fromJson(needs.SetJobs.outputs.nonlinux_matrix)}}
+      fail-fast: false
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+        check-latest: true
+
+    - name: Download views dependencies
+      uses: actions/download-artifact@v4
+      with:
+        name: views
+        path: views/
+
+    - name: Build Go application
+      run: |
+        mkdir -p build/
+        BUILD_OS="${{ matrix.os }}"
+        BUILD_ARCH="${{ matrix.arch }}"
+        GOOS=$(echo "$BUILD_OS" | sed 's/-latest//')
+        WIN_SUFFIX=""
+        if [ "$BUILD_OS" = "windows" ]; then
+          WIN_SUFFIX=".exe"
+        fi
+        CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${{ matrix.arch }} go build -o build/run${WIN_SUFFIX} main.go
+        cp -r views/ build/
+        cp -r apps/ build/
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: LowCode_Plantform-${{ matrix.os }}-${{ matrix.arch }}${{ env.tag }}
+        path: build/
+
   MakeImage:
-    needs: BuildCode
+    needs: [BuildLinux]
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'docker'
 
@@ -177,3 +217,14 @@ jobs:
         platforms: linux/amd64,linux/arm64
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+  ClearTmp:
+    needs: [BuildLinux, NonLinux]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Delete views artifact
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: views
+          failOnError: false
