@@ -3,6 +3,8 @@ name: Build LowCode Platform
 on:
   push: # Trigger on push to any branch
     branches: ["*"]
+    tags:
+      - 'v*' # Add tag trigger for versions
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -11,23 +13,11 @@ env:
   tag: ${{ github.ref_name != 'main' && format('-{0}-{1}', github.ref_name, github.run_id) || '' }}
 
 jobs:
-  build:
+  ViewDependencies:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        os: [linux, darwin, windows]
-        arch: [amd64, arm64]
-      fail-fast: false
-    
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.20'
-        check-latest: true
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Create asset directories
       run: |
@@ -71,7 +61,41 @@ jobs:
             exit 1; 
           }
         done
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: views
+        path: views/
+
+  BuildLinux:
+    needs: [ViewDependencies]
+    runs-on: ubuntu-latest
     
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
+      fail-fast: false
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+        check-latest: true
+
+    - name: Download views dependencies
+      uses: actions/download-artifact@v4
+      with:
+        name: views
+        path: views/
+
     - name: Build Go application
       run: |
         mkdir -p build/
@@ -83,8 +107,8 @@ jobs:
           WIN_SUFFIX=".exe"
         fi
         CGO_ENABLED=0 go build -o build/run${WIN_SUFFIX} main.go
-        cp -r views build/
-        cp -r apps build/
+        cp -r views/ build/
+        cp -r apps/ build/
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -92,9 +116,63 @@ jobs:
         name: LowCode_Plantform-${{ matrix.os }}-${{ matrix.arch }}${{ env.tag }}
         path: build/
 
-  docker:
-    needs: build
+  NonLinux:
+    needs: [ViewDependencies]
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main' 
+    
+    strategy:
+      matrix:
+        include:
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+          - os: windows
+            arch: amd64
+          - os: windows
+            arch: arm64
+      fail-fast: false
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+        check-latest: true
+
+    - name: Download views dependencies
+      uses: actions/download-artifact@v4
+      with:
+        name: views
+        path: views/
+
+    - name: Build Go application
+      run: |
+        mkdir -p build/
+        BUILD_OS="${{ matrix.os }}"
+        BUILD_ARCH="${{ matrix.arch }}"
+        GOOS=$(echo "$BUILD_OS" | sed 's/-latest//')
+        WIN_SUFFIX=""
+        if [ "$BUILD_OS" = "windows" ]; then
+          WIN_SUFFIX=".exe"
+        fi
+        CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${{ matrix.arch }} go build -o build/run${WIN_SUFFIX} main.go
+        cp -r views/ build/
+        cp -r apps/ build/
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: LowCode_Plantform-${{ matrix.os }}-${{ matrix.arch }}${{ env.tag }}
+        path: build/
+
+  MakeImage:
+    needs: [BuildLinux]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'docker'
 
     steps:
     - name: Checkout code
@@ -104,13 +182,13 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: LowCode_Plantform-linux-amd64${{ env.tag }}
-        path: ./build/amd64
+        path: amd64/
 
     - name: Download arm64 build artifact
       uses: actions/download-artifact@v4
       with:
         name: LowCode_Plantform-linux-arm64${{ env.tag }}
-        path: ./build/arm64
+        path: arm64/
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -135,9 +213,50 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
-        context: ./build
-        file: ./dockerfile
+        context: .
+        file: amd64/apps/Dockerfile
         push: true
         platforms: linux/amd64,linux/arm64
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+  ClearTmp:
+    needs: [BuildLinux, NonLinux]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Delete views artifact
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: views
+          failOnError: false
+
+  CreateRelease:
+    needs: [ClearTmp]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') && github.ref_name == 'main'
+    
+    steps:
+      - name: Get release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          
+      - name: Display structure of downloaded files
+        run: ls -R release-artifacts
+      
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            release-artifacts/LowCode_Plantform-linux-amd64
+            release-artifacts/LowCode_Plantform-linux-arm64
+            release-artifacts/LowCode_Plantform-darwin-amd64
+            release-artifacts/LowCode_Plantform-darwin-arm64
+            release-artifacts/LowCode_Plantform-windows-amd64
+            release-artifacts/LowCode_Plantform-windows-arm64
