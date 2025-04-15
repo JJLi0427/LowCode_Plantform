@@ -1,10 +1,9 @@
 name: Build LowCode Platform
 
 on:
-  push: # Trigger on push to any branch
+  push:
     branches: ["*"]
-    tags:
-      - 'v*' # Add tag trigger for versions
+    tags: ["v*"]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -234,7 +233,6 @@ jobs:
   CreateRelease:
     needs: [ClearTmp]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v') && github.ref_name == 'main'
     
     steps:
       - name: Get release artifacts
