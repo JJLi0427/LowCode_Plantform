@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  tag: ${{ github.ref_name != 'main' && format('-{0}-{1}', github.ref_name, github.run_id) || '' }}
+  tag: ${{ format('-{0}-{1}', github.ref_name, github.run_id) }}
 
 jobs:
   ViewDependencies:
@@ -118,7 +118,7 @@ jobs:
   NonLinux:
     needs: [ViewDependencies]
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main' 
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main' || startsWith(github.ref, 'refs/tags/')
     
     strategy:
       matrix:
@@ -233,28 +233,35 @@ jobs:
   CreateRelease:
     needs: [ClearTmp]
     runs-on: ubuntu-latest
-    
+    if: startsWith(github.ref, 'refs/tags/')
+
     steps:
-      - name: Get release artifacts
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           path: release-artifacts
-          
-      - name: Display structure of downloaded files
-        run: ls -R release-artifacts
+
+      - name: Archive downloaded artifacts
+        run: |
+          for d in release-artifacts/*; do
+            if [ -d "$d" ]; then
+              zip -r "${d}.zip" "$d"
+            fi
+          done
       
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.MY_TOKEN }}
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
           generate_release_notes: true
           files: |
-            release-artifacts/LowCode_Plantform-linux-amd64
-            release-artifacts/LowCode_Plantform-linux-arm64
-            release-artifacts/LowCode_Plantform-darwin-amd64
-            release-artifacts/LowCode_Plantform-darwin-arm64
-            release-artifacts/LowCode_Plantform-windows-amd64
-            release-artifacts/LowCode_Plantform-windows-arm64
+            release-artifacts/LowCode_Plantform-linux-amd64${{ env.tag }}.zip
+            release-artifacts/LowCode_Plantform-linux-arm64${{ env.tag }}.zip
+            release-artifacts/LowCode_Plantform-darwin-amd64${{ env.tag }}.zip
+            release-artifacts/LowCode_Plantform-darwin-arm64${{ env.tag }}.zip
+            release-artifacts/LowCode_Plantform-windows-amd64${{ env.tag }}.zip
+            release-artifacts/LowCode_Plantform-windows-arm64${{ env.tag }}.zip
