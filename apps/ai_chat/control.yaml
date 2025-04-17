@@ -1,0 +1,26 @@
+name: ai_chat
+
+head:
+  title: "大模型对话"
+  summary: "大模型助手, 聊天和解决平台开发运维问题"
+  description: "大模型在线聊天, 默认支持deepseek"
+  keywords:
+    - "大模型"
+    - "deepseek"
+    - "聊天"
+    - "问题"
+    - "助手"
+  links:
+  scripts:
+    - https://cdn.staticfile.org/vue/2.2.2/vue.min.js
+  icon:
+  ogs:
+   - {property: og:type, content: website}
+   - {property: og:title, content: 大模型对话}
+   - {property: og:description, content: 大模型在线聊天, 默认支持deepseek}
+
+
+input:
+  view:
+    type: vue
+    filename: aichat.vue
