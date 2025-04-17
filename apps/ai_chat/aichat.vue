@@ -1,15 +1,11 @@
 <template>
   <div id="chatcontainer">
     <div class="chat-interface">
-      <h1>ChatGPT 聊天</h1>
+      <h1>大模型对话</h1>
       <div class="chat-history">
         <div v-for="(message, index) in messages" :key="index" class="message" :class="message.role">
-          <strong>{{ message.role === 'user' ? '你：' : 'ChatGPT: ' }}</strong>
+          <div>{{ message.role === 'user' ? '你：' : 'AI: ' }}</div>
           <div class="message-content">{{ message.content }}</div>
-        </div>
-        <div v-if="isLoading" class="message assistant">
-          <strong>ChatGPT: </strong>
-          <div class="message-content">{{ currentResponse }}<span class="cursor"></span></div>
         </div>
       </div>
       
@@ -20,7 +16,9 @@
           @keyup.enter.ctrl="sendMessage"
         ></textarea>
         <div class="button-container">
-          <button @click="sendMessage" :disabled="isLoading || !userInput.trim()">发送</button>
+          <button @click="sendMessage" :disabled="isLoading || !userInput.trim()">
+            {{ isLoading ? '请求中...' : '发送' }}
+          </button>
         </div>
       </div>
     </div>
@@ -33,81 +31,49 @@ export default {
     return {
       userInput: '',
       messages: [],
-      currentResponse: '',
       isLoading: false,
+      apiBaseUrl: 'https://api.deepseek.com/v1',
       apiKey: ''
     };
   },
   methods: {
     async sendMessage() {
       if (!this.userInput.trim() || this.isLoading) return;
-      
-      // 添加用户消息到聊天记录
+
       const userMessage = { role: 'user', content: this.userInput.trim() };
       this.messages.push(userMessage);
-      
-      // 清空输入框和准备接收响应
-      const userPrompt = this.userInput;
       this.userInput = '';
       this.isLoading = true;
-      this.currentResponse = '';
-      
+
       try {
-        // 准备消息历史
-        const messageHistory = this.messages.map(msg => ({
-          role: msg.role === 'assistant' ? 'assistant' : 'user',
-          content: msg.content
-        }));
-        
-        // 发送请求到OpenAI API
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        const response = await fetch(`${this.apiBaseUrl}/chat/completions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.apiKey}`
           },
           body: JSON.stringify({
-            model: 'gpt-4',
-            messages: messageHistory,
-            stream: true // 开启流式响应
+            model: 'deepseek-chat',
+            messages: this.messages,
+            temperature: 0.7
           })
         });
-        
-        // 处理流式响应
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          
-          // 解析并累加响应内容
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n').filter(line => line.trim() !== '');
-          
-          for (const line of lines) {
-            if (line.includes('[DONE]') || !line.startsWith('data:')) continue;
-            
-            try {
-              const jsonData = JSON.parse(line.substring(5));
-              const content = jsonData.choices[0]?.delta?.content;
-              if (content) {
-                this.currentResponse += content;
-              }
-            } catch (e) {
-              console.error('解析响应失败:', e);
-            }
-          }
+
+        if (!response.ok) {
+          throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
         }
-        
-        // 将完整响应添加到消息历史
-        this.messages.push({ role: 'assistant', content: this.currentResponse });
+
+        const data = await response.json();
+        const answer = data.choices[0]?.message?.content || '';
+        this.messages.push({ role: 'assistant', content: answer });
       } catch (error) {
-        console.error('API请求失败:', error);
-        this.messages.push({ role: 'assistant', content: '抱歉，请求失败，请稍后再试。' });
+        console.error('请求错误:', error);
+        this.messages.push({
+          role: 'assistant',
+          content: `请求失败: ${error.message}，请检查API KEY或稍后重试`
+        });
       } finally {
         this.isLoading = false;
-        this.currentResponse = '';
       }
     }
   }
@@ -115,6 +81,7 @@ export default {
 </script>
 
 <style scoped>
+/* 样式保持不变 */
 div#chatcontainer {
   font-size: large;
   width: 100%;
@@ -160,20 +127,6 @@ div.chat-interface {
 .message-content {
   margin-top: 5px;
   white-space: pre-wrap;
-}
-
-.cursor {
-  display: inline-block;
-  width: 8px;
-  height: 16px;
-  background-color: #000;
-  animation: blink 1s infinite;
-  vertical-align: middle;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 
 .input-container {

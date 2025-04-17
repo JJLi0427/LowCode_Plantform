@@ -13,6 +13,7 @@ head:
   links:
   scripts:
     - https://cdn.staticfile.org/vue/2.2.2/vue.min.js
+    - https://cdn.jsdelivr.net/npm/openai@4.95.0/index.min.js
   icon:
   ogs:
    - {property: og:type, content: website}
