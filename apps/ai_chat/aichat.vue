@@ -33,7 +33,7 @@ export default {
       messages: [],
       isLoading: false,
       apiBaseUrl: 'https://api.deepseek.com/v1',
-      apiKey: 'sk-dc182a14ba614f30a47863dd327f93d2',
+      apiKey: '',
       systemPrompt: "我建立了一个低代码配置文件框架, 可以通过一些简单的配置生成前端页面，你要学会下面这些内容, 然后在用户提问时做出相应的回答, 下面是配置文件的样例和一些注释: "
     };
   },
