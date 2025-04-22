@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  tag: ${{ format('-{0}-{1}', github.ref_name, github.run_id) }}
+  tag: ${{ replace(github.ref_name, '/', '-') }}-${{ github.run_id }}
 
 jobs:
   ViewDependencies:
