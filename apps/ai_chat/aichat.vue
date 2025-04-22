@@ -1,7 +1,7 @@
 <template>
   <div id="chatcontainer">
     <div class="chat-interface">
-      <h1>大模型对话</h1>
+      <h1>ChatBot</h1>
       <div class="chat-history">
         <div v-for="(message, index) in messages" :key="index" class="message" :class="message.role">
           <div>{{ message.role === 'user' ? '你：' : 'AI: ' }}</div>
@@ -12,7 +12,7 @@
       <div class="input-container">
         <textarea 
           v-model="userInput" 
-          placeholder="输入你的问题..." 
+          placeholder="Input..." 
           @keyup.enter.ctrl="sendMessage"
         ></textarea>
         <div class="button-container">
@@ -33,8 +33,24 @@ export default {
       messages: [],
       isLoading: false,
       apiBaseUrl: 'https://api.deepseek.com/v1',
-      apiKey: ''
+      apiKey: '',
+      systemPrompt: "我建立了一个低代码配置文件框架, 可以通过一些简单的配置生成前端页面，你要学会下面这些内容, 然后在用户提问时做出相应的回答, 下面是配置文件的样例和一些注释: "
     };
+  },
+  mounted() {
+    fetch('./sample.txt')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`无法加载配置文件: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(text => {
+        this.systemPrompt += "\n" + text;
+      })
+      .catch(error => {
+        console.error('加载sample.txt出错:', error);
+      });
   },
   methods: {
     async sendMessage() {
@@ -53,8 +69,11 @@ export default {
             'Authorization': `Bearer ${this.apiKey}`
           },
           body: JSON.stringify({
-            model: 'deepseek-chat',
-            messages: this.messages,
+            model: 'deepseek-reasoner',
+            messages: [
+              { role: 'system', content: this.systemPrompt },
+              ...this.messages
+            ],
             temperature: 0.7
           })
         });
@@ -81,7 +100,6 @@ export default {
 </script>
 
 <style scoped>
-/* 样式保持不变 */
 div#chatcontainer {
   font-size: large;
   width: 100%;
@@ -151,7 +169,7 @@ textarea {
 
 button {
   border-radius: 5px;
-  background-color: gray;
+  background-color: rgb(0, 128, 255);
   color: white;
   border: none;
   padding: 10px 20px;
