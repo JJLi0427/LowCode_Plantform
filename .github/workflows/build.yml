@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  tag: ${{ format('-{0}-{1}', github.ref_name, github.run_id) }}
+  tag: ${{ format('-{0}-{1}', startsWith(github.ref_name, 'merge') && 'merge' || github.ref_name, github.run_id) }}
 
 jobs:
   ViewDependencies:
