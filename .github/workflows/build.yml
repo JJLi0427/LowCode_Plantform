@@ -9,12 +9,15 @@ on:
   workflow_dispatch:
 
 env:
-  tag: ${{ format('-{0}-{1}', github.ref_name, github.run_id) }}
+  tag: ${{ github.ref_name }}-${{ github.run_id }}
 
 jobs:
   ViewDependencies:
     runs-on: ubuntu-latest
     steps:
+    - name: Sanitize tag
+      run: echo "TAG=${GITHUB_REF_NAME//\//-}-${GITHUB_RUN_ID}" >> $GITHUB_ENV
+
     - name: Checkout code
       uses: actions/checkout@v4
 
