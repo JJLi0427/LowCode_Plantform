@@ -15,6 +15,7 @@
 In `apps` dir, some tools for ops management as smaple, you can add any tools like them.
 
 ![homepage](./assets/homepage.png)
+![apps](./assets/apps.png)
 
 ## How to Use
 
