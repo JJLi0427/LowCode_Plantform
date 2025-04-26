@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"lowcode/core"
+	"time"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 		fmt.Println("now staring as DEBUG mode...")
 	}
 
-
+	startTime := time.Now()
 	//set default http port
 	if len(*port) == 0 && len(*tlsport) == 0 {
 		*port = ":8088"
@@ -36,6 +37,9 @@ func main() {
 	if err := httpd.Init(); err != nil {
 		fmt.Println(err)
 	}
+	
+	initTime := time.Since(startTime)
+    fmt.Printf("Server initialized in %v\n", initTime)
 
 	if err := httpd.ListenAndServe(); err != nil {
 		fmt.Println(err)
